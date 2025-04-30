@@ -21,24 +21,22 @@ public class DocenteController {
     // LISTA
     @GetMapping("/lista")
     public String list(Model model) {
-        List<Docente> docenti = new ArrayList<>();
-        docenti = docenteService.findAll();
+        List<Docente> docenti = docenteService.findAll();
         model.addAttribute("docenti", docenti);
         return "list-docenti";
     }
 
-    // FORM NUOVO
+    // FORM NUOVO (CREA)
     @GetMapping("/nuovo")
     public String showAdd(Model model) {
         model.addAttribute("docente", new Docente());
-        return "form-docente";
+        return "form-nuovo-docente";  // Usa form separato per nuovo
     }
 
     // SALVA NUOVO
     @PostMapping
-    public String create(@ModelAttribute("docente") Docente docente,
-                         BindingResult br) {
-        if (br.hasErrors()) return "form-docente";
+    public String create(@ModelAttribute("docente") Docente docente, BindingResult br) {
+        if (br.hasErrors()) return "form-nuovo-docente";
         docenteService.save(docente);
         return "redirect:/docenti/lista";
     }
@@ -46,17 +44,16 @@ public class DocenteController {
     // FORM EDIT
     @GetMapping("/{id}/edit")
     public String showEdit(@PathVariable Long id, Model model) {
-        model.addAttribute("docente", docenteService.get(id));
-        return "form-docente";
+        Docente docente = docenteService.get(id);
+        model.addAttribute("docente", docente);
+        return "form-modifica-docente";  // Usa form separato per modifica
     }
 
     // AGGIORNA
     @PostMapping("/{id}")
-    public String update(@PathVariable Long id,
-                         @ModelAttribute("docente") Docente docente,
-                         BindingResult br) {
-        if (br.hasErrors()) return "form-docente";
-        docente.setId(id);
+    public String update(@PathVariable Long id, @ModelAttribute("docente") Docente docente, BindingResult br) {
+        if (br.hasErrors()) return "form-modifica-docente";
+        docente.setId(id);  // Imposta l'ID per l'aggiornamento
         docenteService.save(docente);
         return "redirect:/docenti/lista";
     }
@@ -67,12 +64,4 @@ public class DocenteController {
         docenteService.delete(id);
         return "redirect:/docenti/lista";
     }
-
-//PROVA
-
-
-
-
-
-
 }
