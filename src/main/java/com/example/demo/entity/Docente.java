@@ -10,13 +10,13 @@ public class Docente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "nome")
     private String nome;
 
-    @Column(nullable = false)
+    @Column(name = "cognome", nullable = false)
     private String cognome;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     /* costruttori */
