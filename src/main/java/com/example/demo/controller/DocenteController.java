@@ -30,13 +30,13 @@ public class DocenteController {
     @GetMapping("/nuovo")
     public String showAdd(Model model) {
         model.addAttribute("docente", new Docente());
-        return "form-nuovo-docente";  // Usa form separato per nuovo
+        return "form-docente";  // Usa form separato per nuovo
     }
 
     // SALVA NUOVO
     @PostMapping
     public String create(@ModelAttribute("docente") Docente docente, BindingResult br) {
-        if (br.hasErrors()) return "form-nuovo-docente";
+        if (br.hasErrors()) return "form-docente";
         docenteService.save(docente);
         return "redirect:/docenti/lista";
     }
@@ -46,13 +46,13 @@ public class DocenteController {
     public String showEdit(@PathVariable Long id, Model model) {
         Docente docente = docenteService.get(id);
         model.addAttribute("docente", docente);
-        return "form-modifica-docente";  // Usa form separato per modifica
+        return "form-docente";  // Usa form separato per modifica
     }
 
     // AGGIORNA
     @PostMapping("/{id}")
     public String update(@PathVariable Long id, @ModelAttribute("docente") Docente docente, BindingResult br) {
-        if (br.hasErrors()) return "form-modifica-docente";
+        if (br.hasErrors()) return "form-docente";
         docente.setId(id);  // Imposta l'ID per l'aggiornamento
         docenteService.save(docente);
         return "redirect:/docenti/lista";
