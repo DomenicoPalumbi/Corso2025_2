@@ -8,7 +8,7 @@
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
 </head>
 <body class="container mt-4">
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
     <img src="/images/logo.jfif" alt="Logo" style="height: 40px; margin-right: 10px;">
         <a class="navbar-brand" href="#">Academy 2025</a>
