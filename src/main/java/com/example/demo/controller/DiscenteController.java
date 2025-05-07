@@ -21,7 +21,7 @@ public class DiscenteController {
     @GetMapping("/lista")
     public ModelAndView list() {
         ModelAndView modelAndView = new ModelAndView("lista-discenti");
-        List<Discente> discenti = discenteService.findAll();
+        List<Discente> discenti = discenteService.findAllByOrderByIdAsc();
         modelAndView.addObject("discenti", discenti);
         return modelAndView;
     }
@@ -65,4 +65,29 @@ public class DiscenteController {
         discenteService.delete(id);
         return "redirect:/discenti/lista";
     }
+    // GET /discenti/lista-ordinata-asc
+    @GetMapping("/asc")
+    public ModelAndView listOrderedAsc() {
+        ModelAndView modelAndView = new ModelAndView("lista-discenti");
+        List<Discente> discenti = discenteService.findAllOrderByNomeAsc();
+        modelAndView.addObject("discenti", discenti);
+        return modelAndView;
+    }
+
+    // GET /discenti/lista-ordinata-desc
+    @GetMapping("/desc")
+    public ModelAndView listOrderedDesc() {
+        ModelAndView modelAndView = new ModelAndView("lista-discenti");
+        List<Discente> discenti = discenteService.findAllOrderByNomeDesc();
+        modelAndView.addObject("discenti", discenti);
+        return modelAndView;
+    }
+    @GetMapping("/teramo")
+    public ModelAndView listByCittaResidenza() {
+        ModelAndView modelAndView = new ModelAndView("lista-discenti");
+        List<Discente> discenti = discenteService.findByCittaResidenza("Teramo");
+        modelAndView.addObject("discenti", discenti);
+        return modelAndView;
+    }
+
 }

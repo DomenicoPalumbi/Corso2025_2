@@ -15,8 +15,8 @@ public class DiscenteService {
     @Autowired
     DiscenteRepository discenteRepository;
 
-    public List<Discente> findAll() {
-        return discenteRepository.findAll();
+    public List<Discente> findAllByOrderByIdAsc() {
+        return discenteRepository.findAllByOrderByIdAsc();
     }
 
     public Discente get(Long id) {
@@ -25,6 +25,16 @@ public class DiscenteService {
 
     public Discente save(Discente d) {
         return discenteRepository.save(d);
+    }
+
+    public List<Discente> findAllOrderByNomeAsc() {
+        return discenteRepository.findAllOrderByNomeAsc();  // Chiamata automatica
+    }
+    public List<Discente> findAllOrderByNomeDesc() {
+        return discenteRepository.findAllOrderByNomeDesc();  // Chiamata automatica
+    }
+    public List<Discente> findByCittaResidenza(String cittaResidenza) {
+        return discenteRepository.findByCittaResidenza(cittaResidenza);
     }
 
     public void delete(Long id) {
