@@ -2,6 +2,8 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "docenti")
 public class Docente {
@@ -18,7 +20,8 @@ public class Docente {
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
-
+    @OneToMany(mappedBy = "docente", cascade = CascadeType.ALL , fetch = FetchType.LAZY)
+    private List<Corso> corsi;
     /* costruttori */
     public Docente() {}
     public Docente(String nome, String cognome, String email) {
@@ -57,5 +60,13 @@ public class Docente {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<Corso> getCorsi() {
+        return corsi;
+    }
+
+    public void setCorsi(List<Corso> corsi) {
+        this.corsi = corsi;
     }
 }

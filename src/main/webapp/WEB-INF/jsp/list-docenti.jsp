@@ -20,6 +20,9 @@
                 <li class="nav-item">
                     <a class="btn btn-outline-light" href="<c:url value='/discenti/lista'/>">Discenti</a>
                 </li>
+                <li class="nav-item">
+                                                    <a class="btn btn-outline-light" href="<c:url value='/corsi/lista'/>">Corsi</a>
+                                </li>
             </ul>
         </div>
     </div>
