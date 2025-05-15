@@ -6,6 +6,12 @@
     <title>${corso.id == null ? 'Nuovo Corso' : 'Modifica Corso'}</title>
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
+          <!-- Select2 CSS -->
+          <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+          <!-- jQuery -->
+          <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+          <!-- Select2 JS -->
+          <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 </head>
 <body class="container mt-4">
 <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
@@ -32,29 +38,46 @@
 
 <div class="card">
     <div class="card-body">
-        <c:url var="actionUrl" value="${corso.id == null ? '/corsi' : '/corsi/'}${corso.id == null ? '' : corso.id}" />
+        <c:url var="actionUrl" value="${corso.id == null ? '/corsi/salva' : '/corsi/salva'}" />
+
         <form:form action="${actionUrl}" method="post" modelAttribute="corso">
+            <form:input path="id" type="hidden" />
+            <!-- Nome del Corso -->
             <div class="mb-3">
                 <form:label path="nome" class="form-label">Nome del Corso:</form:label>
                 <form:input path="nome" class="form-control" required="true" />
                 <form:errors path="nome" cssClass="text-danger" />
             </div>
 
+            <!-- Anno Accademico -->
             <div class="mb-3">
                 <form:label path="annoAccademico" class="form-label">Anno Accademico:</form:label>
                 <form:input path="annoAccademico" type="number" min="2020" max="2030" class="form-control" required="true" />
                 <form:errors path="annoAccademico" cssClass="text-danger" />
             </div>
 
+            <!-- Scelta del Docente -->
             <div class="mb-3">
-                <form:label path="docente" class="form-label">Docente:</form:label>
-                <form:select path="docente.id" class="form-select" required="true">
+                <form:label path="docenteId" class="form-label">Docente:</form:label>
+                <form:select path="docenteId" class="form-select" required="true">
                     <form:option value="" label="-- Seleziona un docente --" />
                     <c:forEach var="docente" items="${docenti}">
                         <form:option value="${docente.id}" label="${docente.nome} ${docente.cognome}" />
                     </c:forEach>
                 </form:select>
-                <form:errors path="docente" cssClass="text-danger" />
+                <form:errors path="docenteId" cssClass="text-danger" />
+            </div>
+
+            <!-- Scelta multipla dei Discenti -->
+            <div class="mb-3">
+           <form:select path="discentiIds" multiple="true" cssClass="form-select js-select2" required="true">
+               <c:forEach var="discente" items="${discenti}">
+                   <form:option value="${discente.id}">
+                       ${discente.nome} ${discente.cognome}
+                   </form:option>
+               </c:forEach>
+           </form:select>
+
             </div>
 
             <div class="d-flex justify-content-between">
@@ -64,5 +87,15 @@
         </form:form>
     </div>
 </div>
+<script>
+    $(document).ready(function() {
+        $('.js-select2').select2({
+            placeholder: "Seleziona uno o piu discenti",
+            allowClear: true,
+            width: '100%'
+        });
+    });
+</script>
+
 </body>
 </html>

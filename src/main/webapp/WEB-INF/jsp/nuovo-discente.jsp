@@ -7,23 +7,35 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
 </head>
 <body class="container mt-4">
-<h1>${discente.id != null ? "Modifica Discente" : "Nuovo Discente"}</h1>
 
-<form action="<c:url value='${discente.id != null ? "/discenti/" += discente.id : "/discenti"}'/>" method="post">
+<h1>
+    <c:choose>
+        <c:when test="${discente.id != null}">
+            Modifica Discente
+        </c:when>
+        <c:otherwise>
+            Nuovo Discente
+        </c:otherwise>
+    </c:choose>
+</h1>
+
+<c:choose>
+    <c:when test="${discente.id != null}">
+        <form action="${pageContext.request.contextPath}/discenti/${discente.id}/edit" method="post">
+    </c:when>
+    <c:otherwise>
+        <form action="${pageContext.request.contextPath}/discenti/nuovo" method="post">
+    </c:otherwise>
+</c:choose>
 
     <div class="mb-3">
         <label for="nome" class="form-label">Nome</label>
-       <input type="text" class="form-control" id="nome" name="nome" value="${discente.nome}" required>
+        <input type="text" class="form-control" id="nome" name="nome" value="${discente.nome}" required>
     </div>
 
     <div class="mb-3">
         <label for="cognome" class="form-label">Cognome</label>
-<input type="text" class="form-control" id="cognome" name="cognome" value="${discente.cognome}" required>
-    </div>
-
-    <div class="mb-3">
-        <label for="matricola" class="form-label">Matricola</label>
-        <input type="number" class="form-control" id="matricola" name="matricola" value="${discente.matricola}" required>
+        <input type="text" class="form-control" id="cognome" name="cognome" value="${discente.cognome}" required>
     </div>
 
     <div class="mb-3">
@@ -40,4 +52,4 @@
 </form>
 
 </body>
-</html>
+</

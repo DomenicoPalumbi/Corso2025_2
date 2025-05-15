@@ -68,7 +68,7 @@
 <table class="table table-striped table-bordered shadow-sm rounded table-hover">
     <thead>
     <tr>
-        <th>ID</th><th>Nome</th><th>Cognome</th><th>Email</th><th>Azioni</th>
+        <th>ID</th><th>Nome</th><th>Cognome</th><th>Azioni</th>
     </tr>
     </thead>
     <tbody>
@@ -77,7 +77,7 @@
             <td>${d.id}</td>
             <td>${d.nome}</td>
             <td>${d.cognome}</td>
-            <td>${d.email}</td>
+
             <td>
                 <a class="btn btn-sm btn-outline-secondary rounded-pill" href="<c:url value='/docenti/${d.id}/edit'/>">
                     <i class="bi bi-pencil-square"></i> Modifica
