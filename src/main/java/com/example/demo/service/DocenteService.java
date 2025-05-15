@@ -2,15 +2,14 @@ package com.example.demo.service;
 
 import com.example.demo.data.dto.DocenteDTO;
 import com.example.demo.data.entity.Docente;
-import com.example.demo.converter.Converter;
 import com.example.demo.repository.DocenteRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class DocenteService {
@@ -18,44 +17,62 @@ public class DocenteService {
     @Autowired
     private DocenteRepository docenteRepository;
 
-    // Ottieni tutti i docenti e restituisci come lista di DTO
-   // public List<DocenteDTO> getAllDocenti() {
-     //   List<Docente> docenti = docenteRepository.findAll();
-       // return docenti.stream()
-         //       .map(Converter::toDTO)  // Converte ogni Docente in DocenteDTO
-           //     .collect(Collectors.toList());
-    //}
+    @Autowired
+    private ModelMapper modelMapper;
+
+    // Metodo per convertire Docente in DocenteDTO
+    public DocenteDTO convertToDTO(Docente docente) {
+        return modelMapper.map(docente, DocenteDTO.class);
+    }
+
+    // Metodo per ottenere un Docente dal database tramite ID
+    public DocenteDTO getDocenteById(Long id) {
+        Optional<Docente> docenteOptional = docenteRepository.findById(id);
+        if (docenteOptional.isPresent()) {
+            // Se il docente esiste, ritorna il DTO
+            return convertToDTO(docenteOptional.get());
+        }
+        // Restituisce null se il docente non viene trovato
+        return null;
+    }
+
+    // Metodo per ottenere tutti i docenti
     public List<DocenteDTO> getAllDocenti() {
         List<Docente> docenti = docenteRepository.findAll();
-        List<DocenteDTO> docentiDTO = new ArrayList<>();
+        List<DocenteDTO> docenteDTOs = new ArrayList<>();
         for (Docente docente : docenti) {
-            docentiDTO.add(new DocenteDTO(docente));  // Mappa l'entità a DTO
+            docenteDTOs.add(convertToDTO(docente));
         }
-        return docentiDTO;
+        return docenteDTOs;
     }
 
-    // Ottieni un docente per ID
-    public DocenteDTO getDocenteById(Long id) {
-        Optional<Docente> docente = docenteRepository.findById(id);
-        return docente.map(Converter::toDTO).orElse(null);  // Restituisce null se non trovato
-    }
-
-    // Salva un nuovo docente
+    // Metodo per salvare un nuovo docente
     public void saveDocente(DocenteDTO docenteDTO) {
-        Docente docente = Converter.toEntity(docenteDTO);  // Converte il DTO in entità Docente
-        docenteRepository.save(docente);  // Salva nel database
+        Docente docente = modelMapper.map(docenteDTO, Docente.class);
+        docenteRepository.save(docente);
     }
 
-    // Aggiorna un docente esistente
+    // Metodo per aggiornare un docente esistente
     public void updateDocente(Long id, DocenteDTO docenteDTO) {
-        Docente docente = docenteRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Docente non trovato"));
-        docente.setNome(docenteDTO.getNome());
-        docente.setCognome(docenteDTO.getCognome());
-        docenteRepository.save(docente);  // Salva il docente aggiornato
+        Optional<Docente> existingDocente = docenteRepository.findById(id);
+        if (existingDocente.isPresent()) {
+            Docente docente = existingDocente.get();
+            docente.setNome(docenteDTO.getNome());
+            docente.setCognome(docenteDTO.getCognome());
+            // Aggiungi altri campi da aggiornare se necessario
+            docenteRepository.save(docente);
+        } else {
+            // Ritorna senza fare nulla o aggiungi un messaggio di log
+            // Non lancia un'eccezione, ma potrebbe essere utile loggare il tentativo di aggiornamento non riuscito
+        }
     }
 
-    // Elimina un docente per ID
+    // Metodo per eliminare un docente
     public void deleteDocente(Long id) {
-        docenteRepository.deleteById(id);  // Elimina il docente dal database
+        if (docenteRepository.existsById(id)) {
+            docenteRepository.deleteById(id);
+        } else {
+            // Ritorna senza fare nulla, se non troviamo il docente (potresti loggare l'errore)
+        }
     }
 }

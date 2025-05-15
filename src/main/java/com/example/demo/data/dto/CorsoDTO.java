@@ -1,5 +1,7 @@
 package com.example.demo.data.dto;
 
+import com.example.demo.data.entity.Docente;
+
 import java.util.List;
 
 public class CorsoDTO {

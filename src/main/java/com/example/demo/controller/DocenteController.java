@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @Controller
@@ -33,10 +34,20 @@ public class DocenteController {
 
     // Salva il nuovo docente
     @PostMapping("/nuovo")
-    public String create( @ModelAttribute("docente") DocenteDTO docenteDTO, BindingResult result) {
-       // if (result.hasErrors()) {
-         //   return "form-docente";  // Ritorna alla form se ci sono errori
-       // }
+    public String create(@ModelAttribute("docente") DocenteDTO docenteDTO, BindingResult result, Model model) {
+        // Validazione manuale
+        if (docenteDTO.getNome() == null || docenteDTO.getNome().isEmpty()) {
+            result.rejectValue("nome", "nome.empty", "Il nome non può essere vuoto.");
+        }
+        if (docenteDTO.getCognome() == null || docenteDTO.getCognome().isEmpty()) {
+            result.rejectValue("cognome", "cognome.empty", "Il cognome non può essere vuoto.");
+        }
+
+        // Se ci sono errori, ritorna alla form
+        if (result.hasErrors()) {
+            return "form-docente";
+        }
+
         docenteService.saveDocente(docenteDTO);
         return "redirect:/docenti/lista";  // Redirige alla lista dei docenti
     }
@@ -54,10 +65,20 @@ public class DocenteController {
 
     // Aggiorna docente
     @PostMapping("/{id}/edit")
-    public String update(@PathVariable Long id, @ModelAttribute("docente") DocenteDTO docenteDTO, BindingResult result) {
+    public String update(@PathVariable Long id, @ModelAttribute("docente") DocenteDTO docenteDTO, BindingResult result, Model model) {
+        // Validazione manuale
+        if (docenteDTO.getNome() == null || docenteDTO.getNome().isEmpty()) {
+            result.rejectValue("nome", "nome.empty", "Il nome non può essere vuoto.");
+        }
+        if (docenteDTO.getCognome() == null || docenteDTO.getCognome().isEmpty()) {
+            result.rejectValue("cognome", "cognome.empty", "Il cognome non può essere vuoto.");
+        }
+
+        // Se ci sono errori, ritorna alla form
         if (result.hasErrors()) {
             return "form-docente";  // Ritorna alla form se ci sono errori
         }
+
         docenteService.updateDocente(id, docenteDTO);
         return "redirect:/docenti/lista";  // Redirige alla lista dei docenti
     }
