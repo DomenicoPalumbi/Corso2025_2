@@ -6,12 +6,9 @@
     <title>${corso.id == null ? 'Nuovo Corso' : 'Modifica Corso'}</title>
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
-          <!-- Select2 CSS -->
-          <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-          <!-- jQuery -->
-          <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-          <!-- Select2 JS -->
-          <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 </head>
 <body class="container mt-4">
 <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
@@ -38,10 +35,20 @@
 
 <div class="card">
     <div class="card-body">
-        <c:url var="actionUrl" value="${corso.id == null ? '/corsi/salva' : '/corsi/salva'}" />
+
+        <!-- Seleziona l'URL corretto a seconda se stai creando o modificando -->
+        <c:choose>
+            <c:when test="${corso.id == null}">
+                <c:url var="actionUrl" value="/corsi/salva" />
+            </c:when>
+            <c:otherwise>
+                <c:url var="actionUrl" value="/corsi/${corso.id}/salva" />
+            </c:otherwise>
+        </c:choose>
 
         <form:form action="${actionUrl}" method="post" modelAttribute="corso">
             <form:input path="id" type="hidden" />
+
             <!-- Nome del Corso -->
             <div class="mb-3">
                 <form:label path="nome" class="form-label">Nome del Corso:</form:label>
@@ -70,14 +77,14 @@
 
             <!-- Scelta multipla dei Discenti -->
             <div class="mb-3">
-           <form:select path="discentiIds" multiple="true" cssClass="form-select js-select2" required="true">
-               <c:forEach var="discente" items="${discenti}">
-                   <form:option value="${discente.id}">
-                       ${discente.nome} ${discente.cognome}
-                   </form:option>
-               </c:forEach>
-           </form:select>
-
+                <form:label path="discentiIds" class="form-label">Discenti:</form:label>
+                <form:select path="discentiIds" multiple="true" cssClass="form-select js-select2" required="true">
+                    <c:forEach var="discente" items="${discenti}">
+                        <form:option value="${discente.id}">
+                            ${discente.nome} ${discente.cognome}
+                        </form:option>
+                    </c:forEach>
+                </form:select>
             </div>
 
             <div class="d-flex justify-content-between">
@@ -87,10 +94,11 @@
         </form:form>
     </div>
 </div>
+
 <script>
     $(document).ready(function() {
         $('.js-select2').select2({
-            placeholder: "Seleziona uno o piu discenti",
+            placeholder: "Seleziona uno o più discenti",
             allowClear: true,
             width: '100%'
         });

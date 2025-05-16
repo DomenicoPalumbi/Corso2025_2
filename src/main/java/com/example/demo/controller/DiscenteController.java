@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.data.dto.DiscenteDTO;
+import com.example.demo.data.dto.DiscenteFullDTO;
 import com.example.demo.data.entity.Discente;
 import com.example.demo.service.DiscenteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,72 +24,98 @@ public class DiscenteController {
     public String list(Model model) {
         List<DiscenteDTO> discentiDTO = discenteService.getAllDiscenti();
         model.addAttribute("discenti", discentiDTO);
-        return "lista-discenti";  // La vista per la lista degli studenti
+        return "lista-discenti";
     }
 
     // Mostra il form per aggiungere un nuovo discente
     @GetMapping("/nuovo")
     public String showAdd(Model model) {
-        model.addAttribute("discente", new DiscenteDTO());
-        return "nuovo-discente";  // La vista per il form di aggiunta
+        model.addAttribute("discente", new DiscenteFullDTO());
+        return "nuovo-discente";
     }
 
     // Salva il nuovo discente
     @PostMapping("/nuovo")
-    public String create(@ModelAttribute("discente") DiscenteDTO discenteDTO, BindingResult result) {
-        if (result.hasErrors()) {
-            return "nuovo-discente";  // Ritorna alla form se ci sono errori
+    public String create(@ModelAttribute("discente") DiscenteFullDTO discenteDTO, BindingResult result) {
+        // Validazione manuale
+        if (discenteDTO.getNome() == null || discenteDTO.getNome().isEmpty()) {
+            result.rejectValue("nome", "nome.empty", "Il nome non può essere vuoto.");
         }
+        if (discenteDTO.getCognome() == null || discenteDTO.getCognome().isEmpty()) {
+            result.rejectValue("cognome", "cognome.empty", "Il cognome non può essere vuoto.");
+        }
+        if (discenteDTO.getMatricola() == null) {
+            result.rejectValue("matricola", "matricola.empty", "La matricola è obbligatoria.");
+        }
+
+        if (result.hasErrors()) {
+            return "nuovo-discente";
+        }
+
         discenteService.saveDiscente(discenteDTO);
-        return "redirect:/discenti/lista";  // Redirige alla lista degli studenti
+        return "redirect:/discenti/lista";
     }
 
     // Mostra il form per modificare un discente esistente
     @GetMapping("/{id}/edit")
     public String showEdit(@PathVariable Long id, Model model) {
-        DiscenteDTO discenteDTO = discenteService.getDiscentiById(id);
+        DiscenteFullDTO discenteDTO = discenteService.getFullDiscenteById(id);
         if (discenteDTO == null) {
-            return "redirect:/discenti/lista";  // Se il discente non esiste, redirige alla lista
+            return "redirect:/discenti/lista";
         }
         model.addAttribute("discente", discenteDTO);
-        return "nuovo-discente";  // La vista per il form di modifica
+        return "nuovo-discente";
     }
 
     // Aggiorna un discente
     @PostMapping("/{id}/edit")
-    public String update(@PathVariable Long id, @ModelAttribute("discente") DiscenteDTO discenteDTO, BindingResult result) {
-        if (result.hasErrors()) {
-            return "nuovo-discente";  // Ritorna alla form se ci sono errori
+    public String update(@PathVariable Long id, @ModelAttribute("discente") DiscenteFullDTO discenteDTO, BindingResult result) {
+        if (discenteDTO.getNome() == null || discenteDTO.getNome().isEmpty()) {
+            result.rejectValue("nome", "nome.empty", "Il nome non può essere vuoto.");
         }
+        if (discenteDTO.getCognome() == null || discenteDTO.getCognome().isEmpty()) {
+            result.rejectValue("cognome", "cognome.empty", "Il cognome non può essere vuoto.");
+        }
+        if (discenteDTO.getMatricola() == null) {
+            result.rejectValue("matricola", "matricola.empty", "La matricola è obbligatoria.");
+        }
+
+        if (result.hasErrors()) {
+            return "nuovo-discente";
+        }
+
         discenteService.updateDiscente(id, discenteDTO);
-        return "redirect:/discenti/lista";  // Redirige alla lista degli studenti
+        return "redirect:/discenti/lista";
     }
 
     // Elimina un discente
     @GetMapping("/{id}/delete")
     public String delete(@PathVariable Long id) {
         discenteService.deleteDiscente(id);
-        return "redirect:/discenti/lista";  // Redirige alla lista degli studenti
-    }
-        @GetMapping("/asc")
-        public String ordinaPerNomeAsc(Model model) {
-            List<Discente> discentiOrdinati = discenteService.ordinaPerNomeAsc();
-            model.addAttribute("discenti", discentiOrdinati);
-            return "lista-discenti"; // Ad esempio "elencoDiscenti.jsp"
-        }
-
-        @GetMapping("/desc")
-        public String ordinaPerNomeDesc(Model model) {
-            List<Discente> discentiOrdinati = discenteService.ordinaPerNomeDesc();
-            model.addAttribute("discenti", discentiOrdinati);
-            return "lista-discenti";
-        }
-
-        @GetMapping("/teramo")
-        public String filtraPerCittaTeramo(Model model) {
-            List<Discente> discentiTeramo = discenteService.trovaDiscentiDaTeramo();
-            model.addAttribute("discenti", discentiTeramo);
-            return "lista-discenti";
-        }
+        return "redirect:/discenti/lista";
     }
 
+    // Ordina i discenti per nome ascendente
+    @GetMapping("/asc")
+    public String ordinaPerNomeAsc(Model model) {
+        List<Discente> discentiOrdinati = discenteService.ordinaPerNomeAsc();
+        model.addAttribute("discenti", discentiOrdinati);
+        return "lista-discenti";
+    }
+
+    // Ordina i discenti per nome discendente
+    @GetMapping("/desc")
+    public String ordinaPerNomeDesc(Model model) {
+        List<Discente> discentiOrdinati = discenteService.ordinaPerNomeDesc();
+        model.addAttribute("discenti", discentiOrdinati);
+        return "lista-discenti";
+    }
+
+    // Filtra i discenti per città = Teramo
+    @GetMapping("/teramo")
+    public String filtraPerCittaTeramo(Model model) {
+        List<Discente> discentiTeramo = discenteService.trovaDiscentiDaTeramo();
+        model.addAttribute("discenti", discentiTeramo);
+        return "lista-discenti";
+    }
+}

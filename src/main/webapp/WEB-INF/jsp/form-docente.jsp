@@ -36,6 +36,10 @@
     <div class="mb-3">
         <label for="cognome" class="form-label">Cognome</label>
         <input type="text" name="cognome" id="cognome" class="form-control" value="${docente.cognome}" required>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" name="email" id="email" class="form-control" value="${docente.email}" required>
+        </div>
     </div>
 
     <button type="submit" class="btn btn-success">Salva</button>

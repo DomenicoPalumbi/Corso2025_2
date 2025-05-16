@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.data.dto.DocenteDTO;
+import com.example.demo.data.dto.DocenteFullDTO;
 import com.example.demo.data.entity.Docente;
 import com.example.demo.repository.DocenteRepository;
 import org.modelmapper.ModelMapper;
@@ -25,15 +26,16 @@ public class DocenteService {
         return modelMapper.map(docente, DocenteDTO.class);
     }
 
-    // Metodo per ottenere un Docente dal database tramite ID
+    // Metodo per ottenere un Docente (versione base)
     public DocenteDTO getDocenteById(Long id) {
         Optional<Docente> docenteOptional = docenteRepository.findById(id);
-        if (docenteOptional.isPresent()) {
-            // Se il docente esiste, ritorna il DTO
-            return convertToDTO(docenteOptional.get());
-        }
-        // Restituisce null se il docente non viene trovato
-        return null;
+        return docenteOptional.map(this::convertToDTO).orElse(null);
+    }
+
+    // Metodo per ottenere un DocenteFullDTO (per edit con email)
+    public DocenteFullDTO getFullDocenteById(Long id) {
+        Optional<Docente> docenteOptional = docenteRepository.findById(id);
+        return docenteOptional.map(DocenteFullDTO::new).orElse(null);
     }
 
     // Metodo per ottenere tutti i docenti
@@ -46,24 +48,26 @@ public class DocenteService {
         return docenteDTOs;
     }
 
-    // Metodo per salvare un nuovo docente
-    public void saveDocente(DocenteDTO docenteDTO) {
-        Docente docente = modelMapper.map(docenteDTO, Docente.class);
+    // Metodo per salvare un nuovo docente (usa FullDTO per includere email)
+    public void saveDocente(DocenteFullDTO docenteDTO) {
+        Docente docente = new Docente();
+        docente.setNome(docenteDTO.getNome());
+        docente.setCognome(docenteDTO.getCognome());
+        docente.setEmail(docenteDTO.getEmail());
         docenteRepository.save(docente);
     }
 
-    // Metodo per aggiornare un docente esistente
-    public void updateDocente(Long id, DocenteDTO docenteDTO) {
+    // Metodo per aggiornare un docente esistente (usa FullDTO per includere email)
+    public void updateDocente(Long id, DocenteFullDTO docenteDTO) {
         Optional<Docente> existingDocente = docenteRepository.findById(id);
         if (existingDocente.isPresent()) {
             Docente docente = existingDocente.get();
             docente.setNome(docenteDTO.getNome());
             docente.setCognome(docenteDTO.getCognome());
-            // Aggiungi altri campi da aggiornare se necessario
+            docente.setEmail(docenteDTO.getEmail());
             docenteRepository.save(docente);
         } else {
-            // Ritorna senza fare nulla o aggiungi un messaggio di log
-            // Non lancia un'eccezione, ma potrebbe essere utile loggare il tentativo di aggiornamento non riuscito
+            // eventualmente logga il caso in cui non viene trovato
         }
     }
 
@@ -72,7 +76,7 @@ public class DocenteService {
         if (docenteRepository.existsById(id)) {
             docenteRepository.deleteById(id);
         } else {
-            // Ritorna senza fare nulla, se non troviamo il docente (potresti loggare l'errore)
+            // eventualmente logga il caso in cui non viene trovato
         }
     }
 }

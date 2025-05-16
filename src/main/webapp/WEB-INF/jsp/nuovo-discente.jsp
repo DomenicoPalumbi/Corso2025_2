@@ -37,6 +37,10 @@
         <label for="cognome" class="form-label">Cognome</label>
         <input type="text" class="form-control" id="cognome" name="cognome" value="${discente.cognome}" required>
     </div>
+    <div class="mb-3">
+        <label for="matricola" class="form-label">Matricola</label>
+        <input type="number" class="form-control" id="matricola" name="matricola" value="${discente.matricola}" required>
+    </div>
 
     <div class="mb-3">
         <label for="eta" class="form-label">Eta</label>
@@ -52,4 +56,4 @@
 </form>
 
 </body>
-</
+</html>
