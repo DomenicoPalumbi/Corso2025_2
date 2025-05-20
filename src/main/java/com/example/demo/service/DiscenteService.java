@@ -6,6 +6,7 @@ import com.example.demo.data.entity.Discente;
 import com.example.demo.repository.DiscenteRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -75,8 +76,9 @@ public class DiscenteService {
         discenteRepository.deleteById(id);
     }
 
+
     public List<DiscenteDTO> getAllDiscenti() {
-        return discenteRepository.findAll()
+        return discenteRepository.findAll(Sort.by("id"))  // <-- Ordinamento per ID crescente
                 .stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());

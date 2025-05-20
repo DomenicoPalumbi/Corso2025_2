@@ -9,6 +9,7 @@ import com.example.demo.repository.CorsoRepository;
 import com.example.demo.repository.DiscenteRepository;
 import com.example.demo.repository.DocenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class CorsoService {
 
     // Metodo per visualizzazione lista
     public List<CorsoDTO> getAllCorsiDTO() {
-        return corsoRepository.findAll().stream()
+        return corsoRepository.findAll(Sort.by("id")).stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }

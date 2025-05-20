@@ -6,6 +6,7 @@ import com.example.demo.data.entity.Docente;
 import com.example.demo.repository.DocenteRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -40,13 +41,14 @@ public class DocenteService {
 
     // Metodo per ottenere tutti i docenti
     public List<DocenteDTO> getAllDocenti() {
-        List<Docente> docenti = docenteRepository.findAll();
+        List<Docente> docenti = docenteRepository.findAll(Sort.by("id")); // Ordina per ID
         List<DocenteDTO> docenteDTOs = new ArrayList<>();
         for (Docente docente : docenti) {
             docenteDTOs.add(convertToDTO(docente));
         }
         return docenteDTOs;
     }
+
 
     // Metodo per salvare un nuovo docente (usa FullDTO per includere email)
     public void saveDocente(DocenteFullDTO docenteDTO) {

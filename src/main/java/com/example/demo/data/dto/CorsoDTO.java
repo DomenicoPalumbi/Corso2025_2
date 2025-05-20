@@ -1,8 +1,10 @@
 package com.example.demo.data.dto;
 
+import com.example.demo.data.entity.Corso;
 import com.example.demo.data.entity.Docente;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CorsoDTO {
 
@@ -38,4 +40,25 @@ public class CorsoDTO {
 
     public List<String> getNomiDiscenti() { return nomiDiscenti; }
     public void setNomiDiscenti(List<String> nomiDiscenti) { this.nomiDiscenti = nomiDiscenti; }
+    public CorsoDTO(Corso corso) {
+        this.id = corso.getId();
+        this.nome = corso.getNome();
+        this.annoAccademico = corso.getAnnoAccademico();
+
+        Docente docente = corso.getDocente();
+        if (docente != null) {
+            this.docenteId = docente.getId();
+            this.docenteNomeCompleto = docente.getNome() + " " + docente.getCognome();
+        }
+
+        if (corso.getDiscenti() != null) {
+            this.discentiIds = corso.getDiscenti().stream()
+                    .map(d -> d.getId())
+                    .collect(Collectors.toList());
+
+            this.nomiDiscenti = corso.getDiscenti().stream()
+                    .map(d -> d.getNome() + " " + d.getCognome())
+                    .collect(Collectors.toList());
+        }
+    }
 }

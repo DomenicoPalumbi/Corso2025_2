@@ -60,7 +60,8 @@ public class DocenteController {
     public String showEdit(@PathVariable Long id, Model model) {
         DocenteFullDTO docenteDTO = docenteService.getFullDocenteById(id);
         if (docenteDTO == null) {
-            return "redirect:/docenti/lista";  // Se il docente non esiste, redirige alla lista
+            model.addAttribute("errore", "Docente non trovato con ID: " + id);
+            return "errore-generico"; // oppure ritorna a lista con messaggio flash
         }
         model.addAttribute("docente", docenteDTO);
         return "form-docente";
