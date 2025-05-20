@@ -89,7 +89,7 @@
 
             <div class="d-flex justify-content-between">
                 <button type="submit" class="btn btn-primary">Salva</button>
-                <a href="<c:url value='/corsi/lista'/>" class="btn btn-secondary">Annulla</a>
+                   <a href="<c:url value='/docenti/lista'/>" class="btn btn-secondary">Annulla</a>
             </div>
         </form:form>
     </div>

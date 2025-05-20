@@ -53,6 +53,7 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Salva</button>
+       <a href="<c:url value='/docenti/lista'/>" class="btn btn-secondary">Annulla</a>
 </form>
 
 </body>
