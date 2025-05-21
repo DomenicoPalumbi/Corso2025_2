@@ -45,28 +45,27 @@ public class DiscenteService {
     }
 
     // Salvataggio nuovo Discente (usa FullDTO per includere matricola ecc.)
-    public void saveDiscente(DiscenteFullDTO dto) {
+    public DiscenteFullDTO saveDiscente(DiscenteFullDTO discenteFullDTO) {
         Discente discente = new Discente();
-        discente.setNome(dto.getNome());
-        discente.setCognome(dto.getCognome());
-        discente.setMatricola(dto.getMatricola());
-        discente.setEta(dto.getEta());
-        discente.setCittaResidenza(dto.getCittaResidenza());
+        discente.setNome(discenteFullDTO.getNome());
+        discente.setCognome(discenteFullDTO.getCognome());
+        discente.setMatricola(discenteFullDTO.getMatricola());
+        discente.setEta(discenteFullDTO.getEta());
+        discente.setCittaResidenza(discenteFullDTO.getCittaResidenza());
         discenteRepository.save(discente);
+        return  discenteFullDTO;
     }
 
     // Aggiornamento Discente esistente (da FullDTO)
-    public void updateDiscente(Long id, DiscenteFullDTO dto) {
-        Discente discente = discenteRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Discente non trovato con ID: " + id));
-
-        discente.setNome(dto.getNome());
-        discente.setCognome(dto.getCognome());
-        discente.setMatricola(dto.getMatricola());
-        discente.setEta(dto.getEta());
-        discente.setCittaResidenza(dto.getCittaResidenza());
-
-        discenteRepository.save(discente);
+    public DiscenteDTO updateDiscente(Long id, DiscenteFullDTO discenteFullDTO) {
+        Discente existingDiscente = discenteRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+        existingDiscente.setNome(discenteFullDTO.getNome());
+        existingDiscente.setCognome(discenteFullDTO.getCognome());
+        existingDiscente.setMatricola(discenteFullDTO.getMatricola());
+        existingDiscente.setEta(discenteFullDTO.getEta());
+        existingDiscente.setCittaResidenza(discenteFullDTO.getCittaResidenza());
+        Discente updateDiscente = discenteRepository.save(existingDiscente);
+        return convertToDTO(updateDiscente);
     }
 
     public void deleteDiscente(Long id) {
@@ -79,27 +78,6 @@ public class DiscenteService {
 
     public List<DiscenteDTO> getAllDiscenti() {
         return discenteRepository.findAll(Sort.by("id"))  // <-- Ordinamento per ID crescente
-                .stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
-
-    public List<DiscenteDTO> findAllOrderByNomeAsc() {
-        return discenteRepository.findAllOrderByNomeAsc()
-                .stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
-
-    public List<DiscenteDTO> findAllOrderByNomeDesc() {
-        return discenteRepository.findAllOrderByNomeDesc()
-                .stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
-
-    public List<DiscenteDTO> findByCittaResidenza(String citta) {
-        return discenteRepository.findByCittaResidenza(citta)
                 .stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());

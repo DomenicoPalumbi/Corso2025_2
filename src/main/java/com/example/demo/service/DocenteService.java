@@ -7,6 +7,7 @@ import com.example.demo.repository.DocenteRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -51,26 +52,23 @@ public class DocenteService {
 
 
     // Metodo per salvare un nuovo docente (usa FullDTO per includere email)
-    public void saveDocente(DocenteFullDTO docenteDTO) {
+    public DocenteFullDTO saveDocente(DocenteFullDTO docenteFullDTO) {
         Docente docente = new Docente();
-        docente.setNome(docenteDTO.getNome());
-        docente.setCognome(docenteDTO.getCognome());
-        docente.setEmail(docenteDTO.getEmail());
+        docente.setNome(docenteFullDTO.getNome());
+        docente.setCognome(docenteFullDTO.getCognome());
+        docente.setEmail(docenteFullDTO.getEmail());
         docenteRepository.save(docente);
+        return docenteFullDTO;
     }
 
     // Metodo per aggiornare un docente esistente (usa FullDTO per includere email)
-    public void updateDocente(Long id, DocenteFullDTO docenteDTO) {
-        Optional<Docente> existingDocente = docenteRepository.findById(id);
-        if (existingDocente.isPresent()) {
-            Docente docente = existingDocente.get();
-            docente.setNome(docenteDTO.getNome());
-            docente.setCognome(docenteDTO.getCognome());
-            docente.setEmail(docenteDTO.getEmail());
-            docenteRepository.save(docente);
-        } else {
-            // eventualmente logga il caso in cui non viene trovato
-        }
+    public DocenteDTO updateDocente(Long id, DocenteFullDTO docenteFullDTO) {
+        Docente existingDocente = docenteRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+        existingDocente.setNome(docenteFullDTO.getNome());
+        existingDocente.setCognome(docenteFullDTO.getCognome());
+        existingDocente.setEmail(docenteFullDTO.getEmail());
+        Docente updateDocente = docenteRepository.save(existingDocente);
+        return convertToDTO(updateDocente);
     }
 
     // Metodo per eliminare un docente

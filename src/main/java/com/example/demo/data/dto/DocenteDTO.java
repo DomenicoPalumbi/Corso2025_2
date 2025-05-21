@@ -3,20 +3,20 @@ package com.example.demo.data.dto;
 import com.example.demo.data.entity.Docente;
 
 public class DocenteDTO {
-    private Long id;
+    //private Long id;
     private String nome;
     private String cognome;
 
     public DocenteDTO() {
     }
     public DocenteDTO(Docente docente) {
-        this.id = docente.getId();
+      //  this.id = docente.getId();
         this.nome = docente.getNome();
         this.cognome = docente.getCognome();
     }
 
     public DocenteDTO(Long id,String nome, String cognome) {
-        this.id = id;
+        //this.id = id;
         this.nome = nome;
         this.cognome = cognome;
     }
@@ -38,12 +38,12 @@ public class DocenteDTO {
         this.cognome = cognome;
     }
 
-    public Long getId() {
+/*    public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
+    }*/
 }
 

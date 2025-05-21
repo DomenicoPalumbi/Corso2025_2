@@ -55,28 +55,22 @@ public class CorsoService {
         return dto;
     }
 
-    // FullDTO per form modifica
-    public CorsoFullDTO getCorsoById(Long id) {
-        return corsoRepository.findById(id)
-                .map(CorsoFullDTO::new)
-                .orElse(null);
-    }
-
-    public void saveCorso(CorsoFullDTO dto) {
+    public CorsoFullDTO saveCorso(CorsoFullDTO corsoFullDTO) {
         Corso corso = new Corso();
-        corso.setNome(dto.getNome());
-        corso.setAnnoAccademico(dto.getAnnoAccademico());
+        corso.setNome(corsoFullDTO.getNome());
+        corso.setAnnoAccademico(corsoFullDTO.getAnnoAccademico());
 
-        if (dto.getDocenteId() != null) {
-            docenteRepository.findById(dto.getDocenteId()).ifPresent(corso::setDocente);
+        if (corsoFullDTO.getDocenteId() != null) {
+            docenteRepository.findById(corsoFullDTO.getDocenteId()).ifPresent(corso::setDocente);
         }
 
-        if (dto.getDiscentiIds() != null && !dto.getDiscentiIds().isEmpty()) {
-            List<Discente> discenti = discenteRepository.findAllById(dto.getDiscentiIds());
+        if (corsoFullDTO.getDiscentiIds() != null && !corsoFullDTO.getDiscentiIds().isEmpty()) {
+            List<Discente> discenti = discenteRepository.findAllById(corsoFullDTO.getDiscentiIds());
             corso.setDiscenti(discenti);
         }
 
         corsoRepository.save(corso);
+        return corsoFullDTO;
     }
 
     public void updateCorso(Long id, CorsoFullDTO dto) {
