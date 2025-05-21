@@ -1,13 +1,12 @@
 package com.example.demo.controller;
 
-import com.example.demo.data.dto.DiscenteDTO;
+import com.example.demo.entity.Discente;
 import com.example.demo.service.DiscenteService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -16,67 +15,79 @@ import java.util.List;
 public class DiscenteController {
 
     @Autowired
-    private DiscenteService discenteService;
+    DiscenteService discenteService;
 
+    // LISTA
     @GetMapping("/lista")
-    public String list(Model model) {
-        List<DiscenteDTO> discentiDTO = discenteService.getAllDiscenti();
-        model.addAttribute("discenti", discentiDTO);
-        return "lista-discenti";
+    public ModelAndView list() {
+        ModelAndView modelAndView = new ModelAndView("lista-discenti");
+        List<Discente> discenti = discenteService.findAllByOrderByIdAsc();
+        modelAndView.addObject("discenti", discenti);
+        return modelAndView;
     }
 
-    @GetMapping("/asc")
-    public String listAsc(Model model) {
-        List<DiscenteDTO> discentiDTO = discenteService.findAllOrderByNomeAsc();
-        model.addAttribute("discenti", discentiDTO);
-        return "lista-discenti";
-    }
-
-    @GetMapping("/desc")
-    public String listDesc(Model model) {
-        List<DiscenteDTO> discentiDTO = discenteService.findAllOrderByNomeDesc();
-        model.addAttribute("discenti", discentiDTO);
-        return "lista-discenti";
-    }
-
-    @GetMapping("/teramo")
-    public String listTeramo(Model model) {
-        List<DiscenteDTO> discentiDTO = discenteService.findByCittaResidenza("Teramo");
-        model.addAttribute("discenti", discentiDTO);
-        return "lista-discenti";
-    }
-
+    // FORM NUOVO (CREA)
     @GetMapping("/nuovo")
-    public String showAdd(Model model) {
-        model.addAttribute("discente", new DiscenteDTO());
-        return "nuovo-discente";
+    public String showAdd(ModelAndView model) {
+        model.addObject("discente", new Discente());
+        return "nuovo-discente";  // Usa form separato per nuovo
     }
 
-    @PostMapping("/nuovo")
-    public String create(@ModelAttribute("discente") DiscenteDTO discenteDTO, BindingResult result) {
-        discenteService.saveDiscente(discenteDTO);
+    // SALVA NUOVO
+    @PostMapping
+    public String create(@ModelAttribute("discente") Discente discente, BindingResult br) {
+        if (br.hasErrors()) return "nuovo-discente";
+        discenteService.save(discente);
         return "redirect:/discenti/lista";
     }
 
+    // FORM EDIT
     @GetMapping("/{id}/edit")
-    public String showEdit(@PathVariable Long id, Model model) {
-        DiscenteDTO discenteDTO = discenteService.getDiscentiById(id);
-        if (discenteDTO == null) {
-            return "redirect:/discenti/lista";
-        }
-        model.addAttribute("discente", discenteDTO);
-        return "nuovo-discente";
+    public ModelAndView showEdit(@PathVariable Long id) {
+        Discente discente = discenteService.get(id);
+        ModelAndView modelAndView = new ModelAndView("nuovo-discente");
+        modelAndView.addObject("discente", discente);
+        return modelAndView;
     }
 
-    @PostMapping("/{id}/edit")
-    public String update(@PathVariable Long id, @ModelAttribute("discente") DiscenteDTO discenteDTO, BindingResult result) {
-        discenteService.updateDiscente(id, discenteDTO);
+    // AGGIORNA
+    @PostMapping("/{id}")
+    public String update(@PathVariable Long id, @ModelAttribute("discente") Discente discente, BindingResult br) {
+        if (br.hasErrors()) return "nuovo-discente";
+        discente.setId(id);  // Imposta l'ID per l'aggiornamento
+        discenteService.save(discente);
         return "redirect:/discenti/lista";
     }
 
+    // DELETE
     @GetMapping("/{id}/delete")
     public String delete(@PathVariable Long id) {
-        discenteService.deleteDiscente(id);
+        discenteService.delete(id);
         return "redirect:/discenti/lista";
     }
+    // GET /discenti/lista-ordinata-asc
+    @GetMapping("/asc")
+    public ModelAndView listOrderedAsc() {
+        ModelAndView modelAndView = new ModelAndView("lista-discenti");
+        List<Discente> discenti = discenteService.findAllOrderByNomeAsc();
+        modelAndView.addObject("discenti", discenti);
+        return modelAndView;
+    }
+
+    // GET /discenti/lista-ordinata-desc
+    @GetMapping("/desc")
+    public ModelAndView listOrderedDesc() {
+        ModelAndView modelAndView = new ModelAndView("lista-discenti");
+        List<Discente> discenti = discenteService.findAllOrderByNomeDesc();
+        modelAndView.addObject("discenti", discenti);
+        return modelAndView;
+    }
+    @GetMapping("/teramo")
+    public ModelAndView listByCittaResidenza() {
+        ModelAndView modelAndView = new ModelAndView("lista-discenti");
+        List<Discente> discenti = discenteService.findByCittaResidenza("Teramo");
+        modelAndView.addObject("discenti", discenti);
+        return modelAndView;
+    }
+
 }

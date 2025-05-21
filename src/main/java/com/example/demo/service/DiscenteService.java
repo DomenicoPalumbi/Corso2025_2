@@ -1,72 +1,43 @@
 package com.example.demo.service;
 
-import com.example.demo.converter.Converter;
-import com.example.demo.data.dto.DiscenteDTO;
-import com.example.demo.data.entity.Discente;
+import com.example.demo.entity.Discente;
 import com.example.demo.repository.DiscenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class DiscenteService {
 
+
     @Autowired
-    private DiscenteRepository discenteRepository;
+    DiscenteRepository discenteRepository;
 
-    /*public List<DiscenteDTO> getAllDiscenti() {
-        List<Discente> discenti = discenteRepository.findAll();
-        return discenti.stream()
-                .map(Converter::toDTO)
-                .collect(Collectors.toList());
-    }*/
-
-    public DiscenteDTO getDiscentiById(Long id) {
-        Optional<Discente> discente = discenteRepository.findById(id);
-        return discente.map(Converter::toDTO).orElse(null);
+    public List<Discente> findAllByOrderByIdAsc() {
+        return discenteRepository.findAllByOrderByIdAsc();
     }
 
-    public void saveDiscente(DiscenteDTO discenteDTO) {
-        Discente discente = Converter.toEntity(discenteDTO);
-        discenteRepository.save(discente);
+    public Discente get(Long id) {
+        return discenteRepository.findById(id).orElseThrow();
     }
 
-    public void updateDiscente(Long id, DiscenteDTO discenteDTO) {
-        Discente discente = discenteRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Discente non trovato"));
-        discente.setNome(discenteDTO.getNome());
-        discente.setCognome(discenteDTO.getCognome());
-        discente.setEta(discenteDTO.getEta());
-        discente.setCittaResidenza(discenteDTO.getCittaResidenza());
-        discenteRepository.save(discente);
+    public Discente save(Discente d) {
+        return discenteRepository.save(d);
     }
 
-    public void deleteDiscente(Long id) {
+    public List<Discente> findAllOrderByNomeAsc() {
+        return discenteRepository.findAllOrderByNomeAsc();  // Chiamata automatica
+    }
+    public List<Discente> findAllOrderByNomeDesc() {
+        return discenteRepository.findAllOrderByNomeDesc();  // Chiamata automatica
+    }
+    public List<Discente> findByCittaResidenza(String cittaResidenza) {
+        return discenteRepository.findByCittaResidenza(cittaResidenza);
+    }
+
+    public void delete(Long id) {
         discenteRepository.deleteById(id);
-    }
-
-    public List<DiscenteDTO> findAllOrderByNomeAsc() {
-        return discenteRepository.findAllOrderByNomeAsc()
-                .stream().map(Converter::toDTO).collect(Collectors.toList());
-    }
-
-    public List<DiscenteDTO> findAllOrderByNomeDesc() {
-        return discenteRepository.findAllOrderByNomeDesc()
-                .stream().map(Converter::toDTO).collect(Collectors.toList());
-    }
-
-    public List<DiscenteDTO> findByCittaResidenza(String citta) {
-        return discenteRepository.findByCittaResidenza(citta)
-                .stream().map(Converter::toDTO).collect(Collectors.toList());
-    }
-
-    public List<DiscenteDTO> getAllDiscenti() {
-        List<Discente> discenti = discenteRepository.findAll();
-        return discenti.stream()
-                .map(Converter::toDTO)  // Converte ogni Discente in DiscenteDTO
-                .collect(Collectors.toList());
     }
 }

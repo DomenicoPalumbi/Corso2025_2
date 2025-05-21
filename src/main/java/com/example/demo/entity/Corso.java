@@ -1,7 +1,6 @@
-package com.example.demo.data.entity;
+package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "corsi")
@@ -17,28 +16,20 @@ public class Corso {
     @Column(name = "anno_accademico", nullable = false)
     private Integer annoAccademico;
 
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER )
     @JoinColumn(name = "id_doc", referencedColumnName = "id", nullable = false)
     private Docente docente;
-
-    @ManyToMany
-    @JoinTable(
-            name = "corso_discente",
-            joinColumns = @JoinColumn(name = "corso_id"),
-            inverseJoinColumns = @JoinColumn(name = "discente_id")
-    )
-    private List<Discente> discenti;
 
     /* costruttori */
     public Corso() {}
 
+    // Modificato per passare un oggetto Docente invece di un Integer idDocente
     public Corso(String nome, Integer annoAccademico, Docente docente) {
         this.nome = nome;
         this.annoAccademico = annoAccademico;
         this.docente = docente;
     }
 
-    /* getter e setter */
     public Long getId() {
         return id;
     }
@@ -69,13 +60,5 @@ public class Corso {
 
     public void setDocente(Docente docente) {
         this.docente = docente;
-    }
-
-    public List<Discente> getDiscenti() {
-        return discenti;
-    }
-
-    public void setDiscenti(List<Discente> discenti) {
-        this.discenti = discenti;
     }
 }

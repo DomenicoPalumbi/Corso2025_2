@@ -1,4 +1,4 @@
-package com.example.demo.data.entity;
+package com.example.demo.entity;
 
 import jakarta.persistence.*;
 
@@ -18,21 +18,18 @@ public class Docente {
     @Column(name = "cognome", nullable = false)
     private String cognome;
 
-    @Column(name = "email", unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
-    @OneToMany(mappedBy = "docente", cascade = CascadeType.ALL , fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "docente", cascade = CascadeType.ALL , fetch = FetchType.EAGER)
     private List<Corso> corsi;
     /* costruttori */
     public Docente() {}
-    public Docente(Long id ,String nome, String cognome, String email) {
+    public Docente(String nome, String cognome, String email) {
         this.nome = nome;
         this.cognome = cognome;
         this.email = email;
     }
-    public Docente(String nome, String cognome) {
-        this.nome = nome;
-        this.cognome = cognome;
-    }
+
     public Long getId() {
         return id;
     }

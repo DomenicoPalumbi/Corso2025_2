@@ -1,103 +1,79 @@
 package com.example.demo.controller;
 
-import com.example.demo.converter.CorsoMapper;
-import com.example.demo.data.dto.CorsoDTO;
-import com.example.demo.data.dto.DiscenteDTO;
-import com.example.demo.data.dto.DocenteDTO;
-import com.example.demo.data.entity.Corso;
+import com.example.demo.entity.Corso;
+import com.example.demo.entity.Docente;
 import com.example.demo.service.CorsoService;
-import com.example.demo.service.DiscenteService;
 import com.example.demo.service.DocenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/corsi")
 public class CorsoController {
 
     @Autowired
-    private CorsoService corsoService;
+    CorsoService corsoService;
 
     @Autowired
-    private DocenteService docenteService;
+    DocenteService docenteService;
 
-    @Autowired
-    private DiscenteService discenteService;
-
-    @Autowired
-    private CorsoMapper corsoMapper;
-
+    // LISTA
     @GetMapping("/lista")
-    public String lista(Model model) {
-        List<CorsoDTO> corsi = corsoService.findAll().stream()
-                .map(corsoMapper::toDTO)
-                .toList();
-
-        // Creazione delle mappe per docenti e discenti
-        Map<Long, DocenteDTO> docentiMap = docenteService.getAllDocenti().stream()
-                .collect(Collectors.toMap(DocenteDTO::getId, docente -> docente));
-        Map<Long, DiscenteDTO> discentiMap = discenteService.getAllDiscenti().stream()
-                .collect(Collectors.toMap(DiscenteDTO::getId, discente -> discente));
-
-        // Log per verificare i dati
-        System.out.println("Docenti Map: " + docentiMap);
-        System.out.println("Discenti Map: " + discentiMap);
-
+    public String list(Model model) {
+        List<Corso> corsi = corsoService.findAll();
         model.addAttribute("corsi", corsi);
-        model.addAttribute("docentiMap", docentiMap);
-        model.addAttribute("discentiMap", discentiMap);
-
         return "list-corsi";
     }
 
-    // GET /corsi/nuovo – Form inserimento
+    // FORM NUOVO (CREA)
     @GetMapping("/nuovo")
-    public String nuovo(Model model) {
-        model.addAttribute("corso", new CorsoDTO());
-        model.addAttribute("docenti", docenteService.getAllDocenti());
-        model.addAttribute("discenti", discenteService.getAllDiscenti());
+    public String showAdd(Model model) {
+        model.addAttribute("corso", new Corso());
+        model.addAttribute("docenti", docenteService.findAll());
         return "nuovo-corso";
     }
 
-    @PostMapping("/salva")
-    public String salva(@ModelAttribute("corso") CorsoDTO corsoDTO) {
-        System.out.println("ID Corso: " + corsoDTO.getId());  // Log per verificare se l'ID è passato correttamente
-        Corso corso = corsoMapper.toEntity(corsoDTO);  // Converte il DTO in entità Corso
-
-        if (corso.getId() == null) {
-            corsoService.save(corso);  // Salva un nuovo corso
-        } else {
-            corsoService.update(corso);  // Modifica un corso esistente
+    // SALVA NUOVO
+    @PostMapping
+    public String create(@ModelAttribute("corso") Corso corso, BindingResult br, Model model) {
+        if (br.hasErrors()) {
+            model.addAttribute("docenti", docenteService.findAll());
+            return "nuovo-corso";
         }
-
-        return "redirect:/corsi/lista";  // Redirect alla lista dei corsi dopo il salvataggio
-    }
-
-    @GetMapping("/{id}/edit")
-    public String modifica(@PathVariable Long id, Model model) {
-        Corso corso = corsoService.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Corso non trovato"));
-        CorsoDTO dto = corsoMapper.toDTO(corso);
-
-        model.addAttribute("corso", dto);
-        model.addAttribute("docenti", docenteService.getAllDocenti());
-        model.addAttribute("discenti", discenteService.getAllDiscenti());
-
-        return "nuovo-corso";  // Nome della JSP per la modifica
-    }
-
-    @GetMapping("/{id}/delete")
-    public String elimina(@PathVariable Long id) {
-        if (corsoService.existsById(id)) {
-            corsoService.deleteById(id);
-        }
+        corsoService.save(corso);
         return "redirect:/corsi/lista";
     }
 
+    // FORM EDIT
+    @GetMapping("/{id}/edit")
+    public String showEdit(@PathVariable Long id, Model model) {
+        Corso corso = corsoService.get(id);
+        model.addAttribute("corso", corso);
+        model.addAttribute("docenti", docenteService.findAll());
+        return "nuovo-corso";
+    }
+
+    // AGGIORNA
+    @PostMapping("/{id}")
+    public String update(@PathVariable Long id, @ModelAttribute("corso") Corso corso, BindingResult br, Model model) {
+        if (br.hasErrors()) {
+            model.addAttribute("docenti", docenteService.findAll());
+            return "nuovo-corso";
+        }
+        corso.setId(id);  // Imposta l'ID per l'aggiornamento
+        corsoService.save(corso);
+        return "redirect:/corsi/lista";
+    }
+
+    // DELETE
+    @GetMapping("/{id}/delete")
+    public String delete(@PathVariable Long id) {
+        corsoService.delete(id);
+        return "redirect:/corsi/lista";
+    }
 }
