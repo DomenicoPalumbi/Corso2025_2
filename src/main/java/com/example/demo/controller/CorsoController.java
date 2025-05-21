@@ -5,14 +5,10 @@ import com.example.demo.service.CorsoService;
 import com.example.demo.service.DiscenteService;
 import com.example.demo.service.DocenteService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/corsi")
@@ -27,34 +23,26 @@ public class CorsoController {
     @Autowired
     private DiscenteService discenteService;
 
-    // Mostra lista corsi (usa DTO)
     @GetMapping("/lista")
-    public List<CorsoDTO> listaCorsi(){
-        return corsoService.getAllCorsiDTO();
+    public ResponseEntity<List<CorsoDTO>> listaCorsi() {
+        return ResponseEntity.ok(corsoService.getAllCorsiDTO());
     }
 
-    // Salva nuovo corso
     @PostMapping("/salva")
-    public CorsoFullDTO saveCorso(@RequestBody CorsoFullDTO corsoFullDTO) {
-        return corsoService.saveCorso(corsoFullDTO);
+    public ResponseEntity<CorsoDTO> saveCorso(@RequestBody CorsoFullDTO corsoFullDTO) {
+        return ResponseEntity.ok(corsoService.saveCorso(corsoFullDTO));
     }
 
-    // Aggiornamento corso
-    @PostMapping("/{id}")
-    public String updateCorso(@PathVariable Long id, @ModelAttribute("corso") CorsoFullDTO corsoDTO, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            model.addAttribute("docenti", docenteService.getAllDocenti());
-            model.addAttribute("discenti", discenteService.getAllDiscenti());
-            return "nuovo-corso";
-        }
-        corsoService.updateCorso(id, corsoDTO);
-        return "redirect:/corsi/lista";
+    @PutMapping("/{id}")
+    public ResponseEntity<CorsoDTO> updateCorso(
+            @PathVariable Long id,
+            @RequestBody CorsoFullDTO corsoFullDTO) {
+        return ResponseEntity.ok(corsoService.updateCorso(id, corsoFullDTO));
     }
 
-    // Elimina corso
-    @GetMapping("/{id}/delete")
-    public String delete(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCorso(@PathVariable Long id) {
         corsoService.deleteCorso(id);
-        return "redirect:/corsi/lista";
+        return ResponseEntity.ok().build();
     }
 }
