@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface DiscenteRepository extends JpaRepository<Discente, Long> {
     @Query("SELECT d.nome, d.cognome, d.eta, d.cittaResidenza FROM Discente d ORDER BY d.id ")
@@ -21,4 +22,5 @@ public interface DiscenteRepository extends JpaRepository<Discente, Long> {
     @Query("SELECT d FROM Discente d WHERE d.cittaResidenza = :cittaResidenza")
     List<Discente> findByCittaResidenza(String cittaResidenza);
 
+    Optional<Discente> findByNomeAndCognome(String s, String s1);
 }

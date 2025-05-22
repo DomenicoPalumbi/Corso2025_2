@@ -39,12 +39,22 @@ public class CorsoService {
         corso.setNome(corsoFullDTO.getNome());
         corso.setAnnoAccademico(corsoFullDTO.getAnnoAccademico());
 
-        if (corsoFullDTO.getDocenteId() != null) {
-            docenteRepository.findById(corsoFullDTO.getDocenteId()).ifPresent(corso::setDocente);
+        // Gestione docente tramite nome completo
+        if (corsoFullDTO.getNomeCompletoDocente() != null) {
+            String[] nomeDocente = corsoFullDTO.getNomeCompletoDocente().split(" ", 2);
+            docenteRepository.findByNomeAndCognome(nomeDocente[0], nomeDocente[1])
+                    .ifPresent(corso::setDocente);
         }
 
-        if (corsoFullDTO.getDiscentiIds() != null && !corsoFullDTO.getDiscentiIds().isEmpty()) {
-            List<Discente> discenti = discenteRepository.findAllById(corsoFullDTO.getDiscentiIds());
+        // Gestione discenti tramite nomi completi
+        if (corsoFullDTO.getNomiCompletiDiscenti() != null && !corsoFullDTO.getNomiCompletiDiscenti().isEmpty()) {
+            List<Discente> discenti = corsoFullDTO.getNomiCompletiDiscenti().stream()
+                    .map(nomeCompleto -> {
+                        String[] nome = nomeCompleto.split(" ", 2);
+                        return discenteRepository.findByNomeAndCognome(nome[0], nome[1]).orElse(null);
+                    })
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
             corso.setDiscenti(discenti);
         }
 
@@ -53,27 +63,38 @@ public class CorsoService {
     }
 
     public CorsoDTO updateCorso(Long id, CorsoFullDTO dto) {
-        Optional<Corso> optional = corsoRepository.findById(id);
-        if (optional.isPresent()) {
-            Corso corso = optional.get();
-            corso.setNome(dto.getNome());
-            corso.setAnnoAccademico(dto.getAnnoAccademico());
+        return corsoRepository.findById(id)
+                .map(corso -> {
+                    corso.setNome(dto.getNome());
+                    corso.setAnnoAccademico(dto.getAnnoAccademico());
 
-            if (dto.getDocenteId() != null) {
-                docenteRepository.findById(dto.getDocenteId()).ifPresent(corso::setDocente);
-            }
+                    // Aggiorna docente
+                    if (dto.getNomeCompletoDocente() != null) {
+                        String[] nomeDocente = dto.getNomeCompletoDocente().split(" ", 2);
+                        corso.setDocente(docenteRepository.findByNomeAndCognome(nomeDocente[0], nomeDocente[1])
+                                .orElse(null));
+                    } else {
+                        corso.setDocente(null);
+                    }
 
-            if (dto.getDiscentiIds() != null) {
-                List<Discente> discenti = discenteRepository.findAllById(dto.getDiscentiIds());
-                corso.setDiscenti(discenti);
-            } else {
-                corso.setDiscenti(List.of());
-            }
+                    // Aggiorna discenti
+                    if (dto.getNomiCompletiDiscenti() != null) {
+                        List<Discente> discenti = dto.getNomiCompletiDiscenti().stream()
+                                .map(nomeCompleto -> {
+                                    String[] nome = nomeCompleto.split(" ", 2);
+                                    return discenteRepository.findByNomeAndCognome(nome[0], nome[1])
+                                            .orElse(null);
+                                })
+                                .filter(Objects::nonNull)
+                                .collect(Collectors.toList());
+                        corso.setDiscenti(discenti);
+                    } else {
+                        corso.setDiscenti(List.of());
+                    }
 
-            Corso updatedCorso = corsoRepository.save(corso);
-            return convertToDTO(updatedCorso);
-        }
-        return null;
+                    return convertToDTO(corsoRepository.save(corso));
+                })
+                .orElse(null);
     }
 
     private CorsoDTO convertToDTO(Corso corso) {

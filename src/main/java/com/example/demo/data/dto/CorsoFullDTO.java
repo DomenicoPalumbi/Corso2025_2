@@ -8,18 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CorsoFullDTO {
-
     private Long id;
     private String nome;
     private Integer annoAccademico;
-
-    // Entità complete (opzionali da usare internamente)
-    private Docente docente;
-    private List<Discente> discenti = new ArrayList<>();
-
-    // Per il binding da JSP
-    private Long docenteId;
-    private List<Long> discentiIds = new ArrayList<>();
+    private String nomeCompletoDocente;
+    private List<String> nomiCompletiDiscenti = new ArrayList<>();
 
     public CorsoFullDTO() {
     }
@@ -28,18 +21,19 @@ public class CorsoFullDTO {
         this.id = corso.getId();
         this.nome = corso.getNome();
         this.annoAccademico = corso.getAnnoAccademico();
-        this.docente = corso.getDocente();
-        this.discenti = corso.getDiscenti();
-        this.docenteId = corso.getDocente() != null ? corso.getDocente().getId() : null;
+
+        if (corso.getDocente() != null) {
+            this.nomeCompletoDocente = String.format("%s %s",
+                    corso.getDocente().getNome(),
+                    corso.getDocente().getCognome());
+        }
 
         if (corso.getDiscenti() != null) {
-            for (Discente d : corso.getDiscenti()) {
-                this.discentiIds.add(d.getId());
-            }
+            this.nomiCompletiDiscenti = corso.getDiscenti().stream()
+                    .map(d -> String.format("%s %s", d.getNome(), d.getCognome()))
+                    .toList();
         }
     }
-
-    // Getters e Setters
 
     public Long getId() {
         return id;
@@ -65,35 +59,19 @@ public class CorsoFullDTO {
         this.annoAccademico = annoAccademico;
     }
 
-    public Docente getDocente() {
-        return docente;
+    public String getNomeCompletoDocente() {
+        return nomeCompletoDocente;
     }
 
-    public void setDocente(Docente docente) {
-        this.docente = docente;
+    public void setNomeCompletoDocente(String nomeCompletoDocente) {
+        this.nomeCompletoDocente = nomeCompletoDocente;
     }
 
-    public List<Discente> getDiscenti() {
-        return discenti;
+    public List<String> getNomiCompletiDiscenti() {
+        return nomiCompletiDiscenti;
     }
 
-    public void setDiscenti(List<Discente> discenti) {
-        this.discenti = discenti;
-    }
-
-    public Long getDocenteId() {
-        return docenteId;
-    }
-
-    public void setDocenteId(Long docenteId) {
-        this.docenteId = docenteId;
-    }
-
-    public List<Long> getDiscentiIds() {
-        return discentiIds;
-    }
-
-    public void setDiscentiIds(List<Long> discentiIds) {
-        this.discentiIds = discentiIds;
+    public void setNomiCompletiDiscenti(List<String> nomiCompletiDiscenti) {
+        this.nomiCompletiDiscenti = nomiCompletiDiscenti;
     }
 }
