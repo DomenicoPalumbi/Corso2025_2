@@ -21,10 +21,10 @@ public class Discente {
     @Column(name = "matricola", unique = true)
     private Integer matricola;
 
-    @Column(name = "eta", nullable = false)
+    @Column(name = "eta", nullable = true)
     private Integer eta;
 
-    @Column(name = "citta_residenza", nullable = false)
+    @Column(name = "citta_residenza", nullable = true)
     private String cittaResidenza;
 
     @ManyToMany(mappedBy = "discenti")

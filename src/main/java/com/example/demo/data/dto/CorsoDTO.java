@@ -14,11 +14,11 @@ public class CorsoDTO {
     private Integer annoAccademico;
     @JsonIgnore
     private Long docenteId;
-    private String docenteNomeCompleto;
-    private List<String> discentiNomiCompleti;
+    private String nomeCompletoDocente;
+    private List<String> nomiCompletiDiscenti;
 
     public CorsoDTO() {
-        this.discentiNomiCompleti = new ArrayList<>();
+        this.nomiCompletiDiscenti = new ArrayList<>();
     }
 
     public CorsoDTO(Corso corso) {
@@ -31,11 +31,11 @@ public class CorsoDTO {
             if (corso.getDocente() != null) {
                 Docente docente = corso.getDocente();
                 this.docenteId = docente.getId();
-                this.docenteNomeCompleto = docente.getNome() + " " + docente.getCognome();
+                this.nomeCompletoDocente = docente.getNome() + " " + docente.getCognome();
             }
 
             if (corso.getDiscenti() != null) {
-                this.discentiNomiCompleti = corso.getDiscenti().stream()
+                this.nomiCompletiDiscenti = corso.getDiscenti().stream()
                         .map(d -> d.getNome() + " " + d.getCognome())
                         .collect(Collectors.toList());
             }
@@ -75,18 +75,18 @@ public class CorsoDTO {
     }
 
     public String getDocenteNomeCompleto() {
-        return docenteNomeCompleto;
+        return nomeCompletoDocente;
     }
 
     public void setDocenteNomeCompleto(String docenteNomeCompleto) {
-        this.docenteNomeCompleto = docenteNomeCompleto;
+        this.nomeCompletoDocente = docenteNomeCompleto;
     }
 
     public List<String> getDiscentiNomiCompleti() {
-        return discentiNomiCompleti;
+        return nomiCompletiDiscenti;
     }
 
-    public void setDiscentiNomiCompleti(List<String> discentiNomiCompleti) {
-        this.discentiNomiCompleti = discentiNomiCompleti;
+    public void setDiscentiNomiCompleti(List<String> nomiCompletiDiscenti) {
+        this.nomiCompletiDiscenti = nomiCompletiDiscenti;
     }
 }
