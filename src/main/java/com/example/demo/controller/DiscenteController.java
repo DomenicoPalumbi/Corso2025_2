@@ -1,93 +1,49 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.Discente;
+import com.example.demo.data.dto.DiscenteDTO;
+import com.example.demo.data.dto.DiscenteFullDTO;
+import com.example.demo.data.dto.DiscenteDTO;
+import com.example.demo.data.dto.DiscenteFullDTO;
+import com.example.demo.data.entity.Discente;
 import com.example.demo.service.DiscenteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/discenti")
 public class DiscenteController {
 
     @Autowired
-    DiscenteService discenteService;
+    private DiscenteService discenteService;
 
-    // LISTA
+    // Lista degli studenti
     @GetMapping("/lista")
-    public ModelAndView list() {
-        ModelAndView modelAndView = new ModelAndView("lista-discenti");
-        List<Discente> discenti = discenteService.findAllByOrderByIdAsc();
-        modelAndView.addObject("discenti", discenti);
-        return modelAndView;
+    public List<DiscenteDTO> listaDiscenti(){
+        return discenteService.getAllDiscenti();
+    }
+    // Salva il nuovo discente
+    @PostMapping("/nuovo")
+    public DiscenteFullDTO saveDiscente(@RequestBody DiscenteFullDTO discenteFullDTO) {
+        return discenteService.saveDiscente(discenteFullDTO);
     }
 
-    // FORM NUOVO (CREA)
-    @GetMapping("/nuovo")
-    public String showAdd(ModelAndView model) {
-        model.addObject("discente", new Discente());
-        return "nuovo-discente";  // Usa form separato per nuovo
+    // Aggiorna un discente
+    @PutMapping("/{id}")
+    public ResponseEntity<DiscenteDTO> updateDiscente(@PathVariable Long id, @RequestBody DiscenteFullDTO discenteFullDTO) {
+        DiscenteDTO updateDiscente = discenteService.updateDiscente(id, discenteFullDTO);
+        return ResponseEntity.ok(updateDiscente);
     }
 
-    // SALVA NUOVO
-    @PostMapping
-    public String create(@ModelAttribute("discente") Discente discente, BindingResult br) {
-        if (br.hasErrors()) return "nuovo-discente";
-        discenteService.save(discente);
-        return "redirect:/discenti/lista";
+    // Elimina un discente
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteDiscente(@PathVariable Long id) {
+        discenteService.deleteDiscente(id);
+        return ResponseEntity.noContent().build();
     }
-
-    // FORM EDIT
-    @GetMapping("/{id}/edit")
-    public ModelAndView showEdit(@PathVariable Long id) {
-        Discente discente = discenteService.get(id);
-        ModelAndView modelAndView = new ModelAndView("nuovo-discente");
-        modelAndView.addObject("discente", discente);
-        return modelAndView;
-    }
-
-    // AGGIORNA
-    @PostMapping("/{id}")
-    public String update(@PathVariable Long id, @ModelAttribute("discente") Discente discente, BindingResult br) {
-        if (br.hasErrors()) return "nuovo-discente";
-        discente.setId(id);  // Imposta l'ID per l'aggiornamento
-        discenteService.save(discente);
-        return "redirect:/discenti/lista";
-    }
-
-    // DELETE
-    @GetMapping("/{id}/delete")
-    public String delete(@PathVariable Long id) {
-        discenteService.delete(id);
-        return "redirect:/discenti/lista";
-    }
-    // GET /discenti/lista-ordinata-asc
-    @GetMapping("/asc")
-    public ModelAndView listOrderedAsc() {
-        ModelAndView modelAndView = new ModelAndView("lista-discenti");
-        List<Discente> discenti = discenteService.findAllOrderByNomeAsc();
-        modelAndView.addObject("discenti", discenti);
-        return modelAndView;
-    }
-
-    // GET /discenti/lista-ordinata-desc
-    @GetMapping("/desc")
-    public ModelAndView listOrderedDesc() {
-        ModelAndView modelAndView = new ModelAndView("lista-discenti");
-        List<Discente> discenti = discenteService.findAllOrderByNomeDesc();
-        modelAndView.addObject("discenti", discenti);
-        return modelAndView;
-    }
-    @GetMapping("/teramo")
-    public ModelAndView listByCittaResidenza() {
-        ModelAndView modelAndView = new ModelAndView("lista-discenti");
-        List<Discente> discenti = discenteService.findByCittaResidenza("Teramo");
-        modelAndView.addObject("discenti", discenti);
-        return modelAndView;
-    }
-
 }

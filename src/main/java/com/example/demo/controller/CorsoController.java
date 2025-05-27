@@ -1,79 +1,48 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.Corso;
-import com.example.demo.entity.Docente;
+import com.example.demo.data.dto.*;
 import com.example.demo.service.CorsoService;
+import com.example.demo.service.DiscenteService;
 import com.example.demo.service.DocenteService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/corsi")
 public class CorsoController {
 
     @Autowired
-    CorsoService corsoService;
+    private CorsoService corsoService;
 
     @Autowired
-    DocenteService docenteService;
+    private DocenteService docenteService;
 
-    // LISTA
+    @Autowired
+    private DiscenteService discenteService;
+
     @GetMapping("/lista")
-    public String list(Model model) {
-        List<Corso> corsi = corsoService.findAll();
-        model.addAttribute("corsi", corsi);
-        return "list-corsi";
+    public ResponseEntity<List<CorsoDTO>> listaCorsi() {
+        return ResponseEntity.ok(corsoService.getAllCorsiDTO());
     }
 
-    // FORM NUOVO (CREA)
-    @GetMapping("/nuovo")
-    public String showAdd(Model model) {
-        model.addAttribute("corso", new Corso());
-        model.addAttribute("docenti", docenteService.findAll());
-        return "nuovo-corso";
+    @PostMapping("/nuovo")
+    public ResponseEntity<CorsoDTO> saveCorso(@RequestBody CorsoFullDTO corsoFullDTO) {
+        return ResponseEntity.ok(corsoService.saveCorso(corsoFullDTO));
     }
 
-    // SALVA NUOVO
-    @PostMapping
-    public String create(@ModelAttribute("corso") Corso corso, BindingResult br, Model model) {
-        if (br.hasErrors()) {
-            model.addAttribute("docenti", docenteService.findAll());
-            return "nuovo-corso";
-        }
-        corsoService.save(corso);
-        return "redirect:/corsi/lista";
+    @PutMapping("/{id}")
+    public ResponseEntity<CorsoDTO> updateCorso(
+            @PathVariable Long id,
+            @RequestBody CorsoFullDTO corsoFullDTO) {
+        return ResponseEntity.ok(corsoService.updateCorso(id, corsoFullDTO));
     }
 
-    // FORM EDIT
-    @GetMapping("/{id}/edit")
-    public String showEdit(@PathVariable Long id, Model model) {
-        Corso corso = corsoService.get(id);
-        model.addAttribute("corso", corso);
-        model.addAttribute("docenti", docenteService.findAll());
-        return "nuovo-corso";
-    }
-
-    // AGGIORNA
-    @PostMapping("/{id}")
-    public String update(@PathVariable Long id, @ModelAttribute("corso") Corso corso, BindingResult br, Model model) {
-        if (br.hasErrors()) {
-            model.addAttribute("docenti", docenteService.findAll());
-            return "nuovo-corso";
-        }
-        corso.setId(id);  // Imposta l'ID per l'aggiornamento
-        corsoService.save(corso);
-        return "redirect:/corsi/lista";
-    }
-
-    // DELETE
-    @GetMapping("/{id}/delete")
-    public String delete(@PathVariable Long id) {
-        corsoService.delete(id);
-        return "redirect:/corsi/lista";
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteCorso(@PathVariable Long id) {
+        corsoService.deleteCorso(id);
+        return ResponseEntity.ok().build();
     }
 }

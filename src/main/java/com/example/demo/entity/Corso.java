@@ -13,7 +13,7 @@ public class Corso {
     @Column(nullable = false, name = "nome")
     private String nome;
 
-    @Column(name = "anno_accademico", nullable = false)
+    @Column(name = "anno_accademico", nullable = true)
     private Integer annoAccademico;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER )
