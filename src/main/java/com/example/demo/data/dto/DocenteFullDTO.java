@@ -9,23 +9,16 @@ public class DocenteFullDTO {
     private String nome;
     private String cognome;
     private String email;
-    private List<CorsoDTO> corsi;
 
     public DocenteFullDTO() {
     }
-
     public DocenteFullDTO(Docente docente) {
         this.id = docente.getId();
         this.nome = docente.getNome();
         this.cognome = docente.getCognome();
         this.email = docente.getEmail();
-        if (docente.getCorsi() != null) {
-            this.corsi = docente.getCorsi().stream()
-                    .map(CorsoDTO::new)
-                    .collect(Collectors.toList());
-        }
-    }
 
+    }
     // getter e setter
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -38,7 +31,4 @@ public class DocenteFullDTO {
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
-
-    public List<CorsoDTO> getCorsi() { return corsi; }
-    public void setCorsi(List<CorsoDTO> corsi) { this.corsi = corsi; }
 }

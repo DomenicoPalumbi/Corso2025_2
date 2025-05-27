@@ -27,9 +27,9 @@ public class Discente {
     @Column(name = "citta_residenza", nullable = true)
     private String cittaResidenza;
 
-    @ManyToMany(mappedBy = "discenti")
+   /* @ManyToMany(mappedBy = "discenti")
     private List<Corso> corsi = new ArrayList<>();
-
+*/
     /* costruttori */
     public Discente() {}
 
@@ -97,11 +97,13 @@ public class Discente {
         this.cittaResidenza = cittaResidenza;
     }
 
-    public List<Corso> getCorsi() {
+    /*public List<Corso> getCorsi() {
         return corsi;
     }
 
     public void setCorsi(List<Corso> corsi) {
         this.corsi = corsi;
     }
+
+     */
 }

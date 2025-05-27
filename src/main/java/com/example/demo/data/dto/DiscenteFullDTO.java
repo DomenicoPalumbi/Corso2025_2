@@ -1,9 +1,6 @@
 package com.example.demo.data.dto;
 
-import com.example.demo.data.entity.Corso;
 import com.example.demo.data.entity.Discente;
-
-import java.util.List;
 
 public class DiscenteFullDTO {
     private Long id;
