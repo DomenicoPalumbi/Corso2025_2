@@ -28,7 +28,7 @@ public class CorsoController {
         return ResponseEntity.ok(corsoService.getAllCorsiDTO());
     }
 
-    @PostMapping("/salva")
+    @PostMapping("/nuovo")
     public ResponseEntity<CorsoDTO> saveCorso(@RequestBody CorsoFullDTO corsoFullDTO) {
         return ResponseEntity.ok(corsoService.saveCorso(corsoFullDTO));
     }
@@ -40,7 +40,7 @@ public class CorsoController {
         return ResponseEntity.ok(corsoService.updateCorso(id, corsoFullDTO));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteCorso(@PathVariable Long id) {
         corsoService.deleteCorso(id);
         return ResponseEntity.ok().build();
