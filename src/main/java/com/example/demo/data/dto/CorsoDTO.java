@@ -89,4 +89,5 @@ public class CorsoDTO {
     public void setDiscentiNomiCompleti(List<String> nomiCompletiDiscenti) {
         this.nomiCompletiDiscenti = nomiCompletiDiscenti;
     }
+    //commento prova
 }
