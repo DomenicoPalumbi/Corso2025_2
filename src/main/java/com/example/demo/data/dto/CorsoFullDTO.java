@@ -21,7 +21,7 @@ public class CorsoFullDTO {
         this.id = corso.getId();
         this.nome = corso.getNome();
         this.annoAccademico = corso.getAnnoAccademico();
-
+//commento prova
         if (corso.getDocente() != null) {
             this.nomeCompletoDocente = String.format("%s %s",
                     corso.getDocente().getNome(),
