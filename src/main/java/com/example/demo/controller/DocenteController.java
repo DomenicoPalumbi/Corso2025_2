@@ -23,6 +23,11 @@ public class DocenteController {
     public List<DocenteDTO> listaDocenti(){
         return docenteService.getAllDocenti();
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<DocenteDTO> getDocenteById(@PathVariable Long id) {
+        DocenteDTO docente = docenteService.getDocenteById(id);
+        return ResponseEntity.ok(docente);
+    }
 
     // Aggiungere un nuovo docente
     @PostMapping("/nuovo")

@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/Nuovo_DB
+    url: jdbc:postgresql://localhost:5432/Dom_DB
     username: postgres
     password: domelite
     driver-class-name: org.postgresql.Driver
