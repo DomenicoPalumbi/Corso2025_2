@@ -2,8 +2,10 @@ package com.example.demo.controller;
 
 import com.example.demo.data.dto.DiscenteDTO;
 import com.example.demo.data.dto.DiscenteFullDTO;
+import com.example.demo.data.dto.DocenteDTO;
 import com.example.demo.service.DiscenteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,29 +18,40 @@ public class DiscenteController {
     @Autowired
     private DiscenteService discenteService;
 
-    // Lista degli studenti
     @GetMapping("/lista")
-    public List<DiscenteDTO> listaDiscenti(){
-        return discenteService.getAllDiscenti();
+    public ResponseEntity<List<DiscenteDTO>> listaDiscenti() {
+        List<DiscenteDTO> discenti = discenteService.getAllDiscenti();
+        return ResponseEntity.ok(discenti);
     }
-    // Salva il nuovo discente
+    @GetMapping("/{id}")
+    public ResponseEntity<DiscenteDTO> getDiscenteById(@PathVariable Long id) {
+        DiscenteDTO discente = discenteService.getDiscenteById(id);
+        return ResponseEntity.ok(discente);
+    }
     @PostMapping("/nuovo")
-    public DiscenteFullDTO saveDiscente(@RequestBody DiscenteFullDTO discenteFullDTO) {
-        return discenteService.saveDiscente(discenteFullDTO);
+    public ResponseEntity<DiscenteDTO> saveDiscente(@RequestBody DiscenteDTO discenteDTO) {
+        DiscenteDTO savedDiscente = discenteService.saveDiscente(discenteDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedDiscente);
+    }
+    @PostMapping("/discenti/by-ids")
+    public List<DiscenteDTO> getDiscentiByIds(@RequestBody List<Long> ids) {
+        return discenteService.getDiscentiByIds(ids);
     }
 
-    // Aggiorna un discente
+
     @PutMapping("/{id}")
-    public ResponseEntity<DiscenteDTO> updateDiscente(@PathVariable Long id, @RequestBody DiscenteFullDTO discenteFullDTO) {
-        DiscenteDTO updateDiscente = discenteService.updateDiscente(id, discenteFullDTO);
-        return ResponseEntity.ok(updateDiscente);
+    public ResponseEntity<DiscenteDTO> updateDiscente(
+            @PathVariable Long id,
+            @RequestBody DiscenteDTO discenteDTO) {
+        DiscenteDTO updatedDiscente = discenteService.updateDiscente(id, discenteDTO);
+        return ResponseEntity.ok(updatedDiscente);
     }
 
-    // Elimina un discente
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteDiscente(@PathVariable Long id) {
         discenteService.deleteDiscente(id);
         return ResponseEntity.noContent().build();
     }
-    //commento prova
+
 }
+

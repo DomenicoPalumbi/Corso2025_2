@@ -10,5 +10,5 @@ import java.util.Optional;
 
 public interface DocenteRepository extends JpaRepository<Docente, Long> {
 
-    Optional<Docente> findByNomeAndCognome(String s, String s1);
+    Optional<Docente> findByNomeDocenteAndCognomeDocente(String nomeDocente, String cognomeDocente);
 }

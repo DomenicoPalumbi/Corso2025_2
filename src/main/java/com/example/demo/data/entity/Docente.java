@@ -13,25 +13,25 @@ public class Docente {
     private Long id;
 
     @Column(nullable = false, name = "nome")
-    private String nome;
+    private String nomeDocente;
 
     @Column(name = "cognome", nullable = false)
-    private String cognome;
+    private String cognomeDocente;
 
     @Column(name = "email", unique = true)
-    private String email;
+    private String emailDocente;
   /*  @OneToMany(mappedBy = "docente", fetch = FetchType.LAZY)
     private List<Corso> corsi;*/
     /* costruttori */
     public Docente() {}
-    public Docente(Long id ,String nome, String cognome, String email) {
-        this.nome = nome;
-        this.cognome = cognome;
-        this.email = email;
+    public Docente(Long id ,String nomeDocente, String cognomeDocente, String emailDocente) {
+        this.nomeDocente = nomeDocente;
+        this.cognomeDocente = cognomeDocente;
+        this.emailDocente = emailDocente;
     }
-    public Docente(String nome, String cognome) {
-        this.nome = nome;
-        this.cognome = cognome;
+    public Docente(String nomeDocente, String cognomeDocente) {
+        this.nomeDocente = nomeDocente;
+        this.cognomeDocente = cognomeDocente;
     }
     public Long getId() {
         return id;
@@ -41,28 +41,28 @@ public class Docente {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getNomeDocente() {
+        return nomeDocente;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNomeDocente(String nomeDocente) {
+        this.nomeDocente = nomeDocente;
     }
 
-    public String getCognome() {
-        return cognome;
+    public String getCognomeDocente() {
+        return cognomeDocente;
     }
 
-    public void setCognome(String cognome) {
-        this.cognome = cognome;
+    public void setCognomeDocente(String cognomeDocente) {
+        this.cognomeDocente = cognomeDocente;
     }
 
-    public String getEmail() {
-        return email;
+    public String getEmailDocente() {
+        return emailDocente;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEmailDocente(String emailDocente) {
+        this.emailDocente = emailDocente;
     }
 
    /* public List<Corso> getCorsi() {

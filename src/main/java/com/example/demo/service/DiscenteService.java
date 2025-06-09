@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.data.dto.DiscenteDTO;
-import com.example.demo.data.dto.DiscenteFullDTO;
+import com.example.demo.data.dto.DiscenteDTO;
 import com.example.demo.data.entity.Discente;
 import com.example.demo.repository.DiscenteRepository;
 import org.modelmapper.ModelMapper;
@@ -28,42 +28,44 @@ public class DiscenteService {
     }
 
     // Convertitore in FullDTO
-    private DiscenteFullDTO convertToFullDTO(Discente discente) {
-        return new DiscenteFullDTO(discente);
+    private DiscenteDTO convertToFullDTO(Discente discente) {
+        return new DiscenteDTO(discente);
     }
 
     // Ottenere DTO base
-    public DiscenteDTO getDiscentiById(Long id) {
+    public DiscenteDTO getDiscenteById(Long id) {
         Optional<Discente> discente = discenteRepository.findById(id);
         return discente.map(this::convertToDTO).orElse(null);
     }
 
     // Ottenere FullDTO per la modifica
-    public DiscenteFullDTO getFullDiscenteById(Long id) {
+    public DiscenteDTO getFullDiscenteById(Long id) {
         Optional<Discente> discente = discenteRepository.findById(id);
         return discente.map(this::convertToFullDTO).orElse(null);
     }
 
     // Salvataggio nuovo Discente (usa FullDTO per includere matricola ecc.)
-    public DiscenteFullDTO saveDiscente(DiscenteFullDTO discenteFullDTO) {
+    public DiscenteDTO saveDiscente(DiscenteDTO DiscenteDTO) {
         Discente discente = new Discente();
-        discente.setNome(discenteFullDTO.getNome());
-        discente.setCognome(discenteFullDTO.getCognome());
-        discente.setMatricola(discenteFullDTO.getMatricola());
-        discente.setEta(discenteFullDTO.getEta());
-        discente.setCittaResidenza(discenteFullDTO.getCittaResidenza());
-        discenteRepository.save(discente);
-        return  discenteFullDTO;
+        discente.setNomeDiscente(DiscenteDTO.getNomeDiscente());
+        discente.setCognomeDiscente(DiscenteDTO.getCognomeDiscente());
+
+        Discente saved = discenteRepository.save(discente);
+        return convertToDTO(saved);
+    }
+    public List<DiscenteDTO> getDiscentiByIds(List<Long> ids) {
+        return discenteRepository.findAllById(ids)
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
+
     // Aggiornamento Discente esistente (da FullDTO)
-    public DiscenteDTO updateDiscente(Long id, DiscenteFullDTO discenteFullDTO) {
+    public DiscenteDTO updateDiscente(Long id, DiscenteDTO DiscenteDTO) {
         Discente existingDiscente = discenteRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
-        existingDiscente.setNome(discenteFullDTO.getNome());
-        existingDiscente.setCognome(discenteFullDTO.getCognome());
-        existingDiscente.setMatricola(discenteFullDTO.getMatricola());
-        existingDiscente.setEta(discenteFullDTO.getEta());
-        existingDiscente.setCittaResidenza(discenteFullDTO.getCittaResidenza());
+        existingDiscente.setNomeDiscente(DiscenteDTO.getNomeDiscente());
+        existingDiscente.setCognomeDiscente(DiscenteDTO.getCognomeDiscente());
         Discente updateDiscente = discenteRepository.save(existingDiscente);
         return convertToDTO(updateDiscente);
     }
@@ -86,14 +88,14 @@ public class DiscenteService {
     public List<Discente> ordinaPerNomeAsc() {
         return discenteRepository.findAll()
                 .stream()
-                .sorted((d1, d2) -> d1.getNome().compareToIgnoreCase(d2.getNome()))
+                .sorted((d1, d2) -> d1.getNomeDiscente().compareToIgnoreCase(d2.getNomeDiscente()))
                 .collect(Collectors.toList());
     }
 
     public List<Discente> ordinaPerNomeDesc() {
         return discenteRepository.findAll()
                 .stream()
-                .sorted((d1, d2) -> d2.getNome().compareToIgnoreCase(d1.getNome()))
+                .sorted((d1, d2) -> d2.getNomeDiscente().compareToIgnoreCase(d1.getNomeDiscente()))
                 .collect(Collectors.toList());
     }
 
@@ -103,4 +105,5 @@ public class DiscenteService {
                 .filter(d -> "Teramo".equalsIgnoreCase(d.getCittaResidenza()))
                 .collect(Collectors.toList());
     }
+
 }

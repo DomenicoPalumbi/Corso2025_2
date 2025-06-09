@@ -1,41 +1,59 @@
 package com.example.demo.data.dto;
 
 import com.example.demo.data.entity.Docente;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DocenteDTO {
-    //private Long id;
-    private String nome;
-    private String cognome;
-
+    private Long id;
+    private String nomeDocente;
+    private String cognomeDocente;
+    private String emailDocente;
     public DocenteDTO() {
     }
     public DocenteDTO(Docente docente) {
-      //  this.id = docente.getId();
-        this.nome = docente.getNome();
-        this.cognome = docente.getCognome();
+        this.id = docente.getId();
+        this.nomeDocente = docente.getNomeDocente();
+        this.cognomeDocente = docente.getCognomeDocente();
+        this.emailDocente = docente.getEmailDocente();
     }
 
-    public DocenteDTO(Long id,String nome, String cognome) {
-        //this.id = id;
-        this.nome = nome;
-        this.cognome = cognome;
+    public DocenteDTO(Long id,String nomeDocente, String cognomeDocente, String emailDocente) {
+        this.id = id;
+        this.nomeDocente = nomeDocente;
+        this.cognomeDocente = cognomeDocente;
+        this.emailDocente = emailDocente;
     }
 
-
-    public String getNome() {
-        return nome;
+    public Long getId() {
+        return id;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getCognome() {
-        return cognome;
+    public String getEmailDocente() {
+        return emailDocente;
     }
 
-    public void setCognome(String cognome) {
-        this.cognome = cognome;
+    public void setEmailDocente(String emailDocente) {
+        this.emailDocente = emailDocente;
+    }
+
+    public String getNomeDocente() {
+        return nomeDocente;
+    }
+
+    public void setNomeDocente(String nomeDocente) {
+        this.nomeDocente = nomeDocente;
+    }
+
+    public String getCognomeDocente() {
+        return cognomeDocente;
+    }
+
+    public void setCognome(String cognomeDocente) {
+        this.cognomeDocente = cognomeDocente;
     }
 
 /*    public Long getId() {

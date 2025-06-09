@@ -24,7 +24,17 @@ public class DocenteService {
 
     // Metodo per convertire Docente in DocenteDTO
     public DocenteDTO convertToDTO(Docente docente) {
-        return modelMapper.map(docente, DocenteDTO.class);
+        return new DocenteDTO(
+                docente.getId(),
+                docente.getNomeDocente(),
+                docente.getCognomeDocente(),
+                docente.getEmailDocente()
+        );
+    }
+
+    public DocenteDTO findByNomeAndCognome(String nome, String cognome) {
+        Optional<Docente> docenteOpt = docenteRepository.findByNomeDocenteAndCognomeDocente(nome, cognome);
+        return docenteOpt.map(this::convertToDTO).orElse(null);
     }
 
     // Metodo per ottenere un Docente (versione base)
@@ -53,9 +63,9 @@ public class DocenteService {
     // Metodo per salvare un nuovo docente (usa FullDTO per includere email)
     public DocenteFullDTO saveDocente(DocenteFullDTO docenteFullDTO) {
         Docente docente = new Docente();
-        docente.setNome(docenteFullDTO.getNome());
-        docente.setCognome(docenteFullDTO.getCognome());
-        docente.setEmail(docenteFullDTO.getEmail());
+        docente.setNomeDocente(docenteFullDTO.getNomeDocente());
+        docente.setCognomeDocente(docenteFullDTO.getCognomeDocente());
+        docente.setEmailDocente(docenteFullDTO.getEmailDocente());
         docenteRepository.save(docente);
         return docenteFullDTO;
     }
@@ -63,9 +73,9 @@ public class DocenteService {
     // Metodo per aggiornare un docente esistente (usa FullDTO per includere email)
     public DocenteDTO updateDocente(Long id, DocenteFullDTO docenteFullDTO) {
         Docente existingDocente = docenteRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
-        existingDocente.setNome(docenteFullDTO.getNome());
-        existingDocente.setCognome(docenteFullDTO.getCognome());
-        existingDocente.setEmail(docenteFullDTO.getEmail());
+        existingDocente.setNomeDocente(docenteFullDTO.getNomeDocente());
+        existingDocente.setCognomeDocente(docenteFullDTO.getCognomeDocente());
+        existingDocente.setEmailDocente(docenteFullDTO.getEmailDocente());
         Docente updateDocente = docenteRepository.save(existingDocente);
         return convertToDTO(updateDocente);
     }

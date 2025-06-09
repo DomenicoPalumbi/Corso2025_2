@@ -12,11 +12,11 @@ public class Discente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, name = "nome")
-    private String nome;
+    @Column(nullable = false, name = "nomeDiscente")
+    private String nomeDiscente;
 
-    @Column(name = "cognome", nullable = false)
-    private String cognome;
+    @Column(name = "cognomeDiscente", nullable = false)
+    private String cognomeDiscente;
 
     @Column(name = "matricola", unique = true)
     private Integer matricola;
@@ -33,17 +33,17 @@ public class Discente {
     /* costruttori */
     public Discente() {}
 
-    public Discente(String nome, String cognome, Integer matricola, Integer eta, String cittaResidenza) {
-        this.nome = nome;
-        this.cognome = cognome;
+    public Discente(String nomeDiscente, String cognomeDiscente, Integer matricola, Integer eta, String cittaResidenza) {
+        this.nomeDiscente = nomeDiscente;
+        this.cognomeDiscente = cognomeDiscente;
         this.matricola = matricola;
         this.eta = eta;
         this.cittaResidenza = cittaResidenza;
     }
 
-    public Discente(String nome, String cognome, Integer eta, String cittaResidenza) {
-        this.nome = nome;
-        this.cognome = cognome;
+    public Discente(String nomeDiscente, String cognomeDiscente, Integer eta, String cittaResidenza) {
+        this.nomeDiscente = nomeDiscente;
+        this.cognomeDiscente = cognomeDiscente;
         this.eta = eta;
         this.cittaResidenza = cittaResidenza;
     }
@@ -57,20 +57,20 @@ public class Discente {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getNomeDiscente() {
+        return nomeDiscente;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNomeDiscente(String nomeDiscente) {
+        this.nomeDiscente = nomeDiscente;
     }
 
-    public String getCognome() {
-        return cognome;
+    public String getCognomeDiscente() {
+        return cognomeDiscente;
     }
 
-    public void setCognome(String cognome) {
-        this.cognome = cognome;
+    public void setCognomeDiscente(String cognomeDiscente) {
+        this.cognomeDiscente = cognomeDiscente;
     }
 
     public Integer getMatricola() {

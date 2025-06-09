@@ -4,8 +4,8 @@ import com.example.demo.data.entity.Discente;
 
 public class DiscenteFullDTO {
     private Long id;
-    private String nome;
-    private String cognome;
+    private String nomeDiscente;
+    private String cognomeDiscente;
     private Integer matricola;
     private Integer eta;
     private String cittaResidenza;
@@ -16,8 +16,8 @@ public class DiscenteFullDTO {
 
     public DiscenteFullDTO(Discente discente) {
         this.id = discente.getId();
-        this.nome = discente.getNome();
-        this.cognome = discente.getCognome();
+        this.nomeDiscente = discente.getNomeDiscente();
+        this.cognomeDiscente = discente.getCognomeDiscente();
         this.matricola = discente.getMatricola();
         this.eta = discente.getEta();
         this.cittaResidenza = discente.getCittaResidenza();
@@ -34,20 +34,20 @@ public class DiscenteFullDTO {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getNomeDiscente() {
+        return nomeDiscente;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNomeDiscente(String nomeDiscente) {
+        this.nomeDiscente = nomeDiscente;
     }
 
-    public String getCognome() {
-        return cognome;
+    public String getCognomeDiscente() {
+        return cognomeDiscente;
     }
 
-    public void setCognome(String cognome) {
-        this.cognome = cognome;
+    public void setCognomeDiscente(String cognomeDiscente) {
+        this.cognomeDiscente = cognomeDiscente;
     }
 
     public Integer getMatricola() {

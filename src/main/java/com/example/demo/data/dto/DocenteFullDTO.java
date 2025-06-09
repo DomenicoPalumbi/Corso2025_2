@@ -6,29 +6,29 @@ import java.util.stream.Collectors;
 
 public class DocenteFullDTO {
     private Long id;
-    private String nome;
-    private String cognome;
-    private String email;
+    private String nomeDocente;
+    private String cognomeDocente;
+    private String emailDocente;
 
     public DocenteFullDTO() {
     }
     public DocenteFullDTO(Docente docente) {
         this.id = docente.getId();
-        this.nome = docente.getNome();
-        this.cognome = docente.getCognome();
-        this.email = docente.getEmail();
+        this.nomeDocente = docente.getNomeDocente();
+        this.cognomeDocente = docente.getCognomeDocente();
+        this.emailDocente = docente.getEmailDocente();
 
     }
     // getter e setter
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
+    public String getNomeDocente() { return nomeDocente; }
+    public void setNomeDocente(String nomeDocente) { this.nomeDocente = nomeDocente; }
 
-    public String getCognome() { return cognome; }
-    public void setCognome(String cognome) { this.cognome = cognome; }
+    public String getCognomeDocente() { return cognomeDocente; }
+    public void setCognomeDocente(String cognomeDocente) { this.cognomeDocente = cognomeDocente; }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getEmailDocente() { return emailDocente; }
+    public void setEmailDocente(String emailDocente) { this.emailDocente = emailDocente; }
 }
