@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import com.example.demo.data.dto.DiscenteDTO;
 import com.example.demo.data.dto.DiscenteFullDTO;
 import com.example.demo.data.dto.DocenteDTO;
+import com.example.demo.data.entity.Discente;
+import com.example.demo.repository.DiscenteRepository;
 import com.example.demo.service.DiscenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/discenti")
@@ -17,6 +20,8 @@ public class DiscenteController {
 
     @Autowired
     private DiscenteService discenteService;
+    @Autowired
+    private DiscenteRepository discenteRepository;
 
     @GetMapping("/lista")
     public ResponseEntity<List<DiscenteDTO>> listaDiscenti() {
@@ -37,7 +42,24 @@ public class DiscenteController {
     public List<DiscenteDTO> getDiscentiByIds(@RequestBody List<Long> ids) {
         return discenteService.getDiscentiByIds(ids);
     }
+    @PostMapping("/cerca")
+    public ResponseEntity<DiscenteDTO> cercaDiscente(@RequestBody Map<String, String> request) {
+        String nomeDiscente = request.get("nomeDiscente");
+        String cognomeDiscente = request.get("cognomeDiscente");
 
+        if (nomeDiscente == null || cognomeDiscente == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Discente discente = discenteRepository.findByNomeDiscenteAndCognomeDiscente(
+                nomeDiscente,
+                cognomeDiscente
+        );
+
+        return discente != null ?
+                ResponseEntity.ok(new DiscenteDTO(discente)) :
+                ResponseEntity.notFound().build();
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<DiscenteDTO> updateDiscente(

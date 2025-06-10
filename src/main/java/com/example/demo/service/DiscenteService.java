@@ -46,6 +46,15 @@ public class DiscenteService {
 
     // Salvataggio nuovo Discente (usa FullDTO per includere matricola ecc.)
     public DiscenteDTO saveDiscente(DiscenteDTO DiscenteDTO) {
+        // Verifica se esiste già un discente con lo stesso nome e cognome
+        Discente existingDiscente = discenteRepository.findByNomeDiscenteAndCognomeDiscente(DiscenteDTO.getNomeDiscente(), DiscenteDTO.getCognomeDiscente());
+
+        if (existingDiscente != null) {
+            // Se il discente esiste già, ritorna il suo DTO senza creare un nuovo discente
+            return convertToDTO(existingDiscente);
+        }
+
+        // Se non esiste, procedi con la creazione di un nuovo discente
         Discente discente = new Discente();
         discente.setNomeDiscente(DiscenteDTO.getNomeDiscente());
         discente.setCognomeDiscente(DiscenteDTO.getCognomeDiscente());
@@ -53,6 +62,7 @@ public class DiscenteService {
         Discente saved = discenteRepository.save(discente);
         return convertToDTO(saved);
     }
+
     public List<DiscenteDTO> getDiscentiByIds(List<Long> ids) {
         return discenteRepository.findAllById(ids)
                 .stream()
