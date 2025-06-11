@@ -9,7 +9,6 @@ public class DiscenteFullDTO {
     private Integer matricola;
     private Integer eta;
     private String cittaResidenza;
-    //private List<Corso> corsi;
 
     public DiscenteFullDTO() {
     }
@@ -21,7 +20,6 @@ public class DiscenteFullDTO {
         this.matricola = discente.getMatricola();
         this.eta = discente.getEta();
         this.cittaResidenza = discente.getCittaResidenza();
-        //this.corsi = discente.getCorsi(); // ATTENZIONE: vedi nota sotto
     }
 
     // Getter e Setter
@@ -74,11 +72,4 @@ public class DiscenteFullDTO {
         this.cittaResidenza = cittaResidenza;
     }
 
-   /* public List<Corso> getCorsi() {
-        return corsi;
-    }
-
-    public void setCorsi(List<Corso> corsi) {
-        this.corsi = corsi;
-    }*/
 }

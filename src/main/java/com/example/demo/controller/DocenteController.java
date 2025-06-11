@@ -48,7 +48,6 @@ public class DocenteController {
     }
 
     // Aggiorna docente
-    // Update a product
     @PutMapping("/{id}")
     public ResponseEntity<DocenteDTO> updateDocente(@PathVariable Long id, @RequestBody DocenteFullDTO docenteFullDTO) {
         DocenteDTO updateDocente = docenteService.updateDocente(id, docenteFullDTO);
@@ -72,6 +71,4 @@ public class DocenteController {
             return ResponseEntity.notFound().build();
         }
     }
-
-    //commento prova
 }

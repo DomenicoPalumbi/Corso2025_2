@@ -20,19 +20,21 @@ public class Docente {
 
     @Column(name = "email", unique = true)
     private String emailDocente;
-  /*  @OneToMany(mappedBy = "docente", fetch = FetchType.LAZY)
-    private List<Corso> corsi;*/
-    /* costruttori */
-    public Docente() {}
-    public Docente(Long id ,String nomeDocente, String cognomeDocente, String emailDocente) {
+
+    public Docente() {
+    }
+
+    public Docente(Long id, String nomeDocente, String cognomeDocente, String emailDocente) {
         this.nomeDocente = nomeDocente;
         this.cognomeDocente = cognomeDocente;
         this.emailDocente = emailDocente;
     }
+
     public Docente(String nomeDocente, String cognomeDocente) {
         this.nomeDocente = nomeDocente;
         this.cognomeDocente = cognomeDocente;
     }
+
     public Long getId() {
         return id;
     }
@@ -65,13 +67,4 @@ public class Docente {
         this.emailDocente = emailDocente;
     }
 
-   /* public List<Corso> getCorsi() {
-        return corsi;
-    }
-
-    public void setCorsi(List<Corso> corsi) {
-        this.corsi = corsi;
-    }
-
-    */
 }

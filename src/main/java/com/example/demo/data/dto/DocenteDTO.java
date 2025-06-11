@@ -1,7 +1,7 @@
 package com.example.demo.data.dto;
 
 import com.example.demo.data.entity.Docente;
-import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 public class DocenteDTO {
     private Long id;
@@ -56,12 +56,5 @@ public class DocenteDTO {
         this.cognomeDocente = cognomeDocente;
     }
 
-/*    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }*/
 }
 

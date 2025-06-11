@@ -20,5 +20,4 @@ public class DemoApplication extends SpringBootServletInitializer {
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return builder.sources(DemoApplication.class);
     }
-    //commento prova2
 }
