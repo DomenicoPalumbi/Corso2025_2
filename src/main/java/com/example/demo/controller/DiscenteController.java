@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/discenti")
 public class DiscenteController {
@@ -38,28 +38,27 @@ public class DiscenteController {
         DiscenteDTO savedDiscente = discenteService.saveDiscente(discenteDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedDiscente);
     }
-    @PostMapping("/discenti/by-ids")
+    @PostMapping("/by-ids")
     public List<DiscenteDTO> getDiscentiByIds(@RequestBody List<Long> ids) {
         return discenteService.getDiscentiByIds(ids);
     }
-    @PostMapping("/cerca")
-    public ResponseEntity<DiscenteDTO> cercaDiscente(@RequestBody Map<String, String> request) {
-        String nomeDiscente = request.get("nomeDiscente");
-        String cognomeDiscente = request.get("cognomeDiscente");
-
-        if (nomeDiscente == null || cognomeDiscente == null) {
-            return ResponseEntity.badRequest().build();
-        }
-
+    @PostMapping("/get-or-create")
+    public ResponseEntity<DiscenteDTO> getOrCreateDiscente(@RequestBody DiscenteDTO input) {
         Discente discente = discenteRepository.findByNomeDiscenteAndCognomeDiscente(
-                nomeDiscente,
-                cognomeDiscente
+                input.getNomeDiscente(),
+                input.getCognomeDiscente()
         );
 
-        return discente != null ?
-                ResponseEntity.ok(new DiscenteDTO(discente)) :
-                ResponseEntity.notFound().build();
+        if (discente == null) {
+            discente = new Discente();
+            discente.setNomeDiscente(input.getNomeDiscente());
+            discente.setCognomeDiscente(input.getCognomeDiscente());
+            discente = discenteRepository.save(discente);
+        }
+
+        return ResponseEntity.ok(new DiscenteDTO(discente));
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<DiscenteDTO> updateDiscente(
